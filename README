@@ -1,0 +1,38 @@
+# MSc Data Science final project
+## Prediction of prolonged length of stay in intensive care units using routinely collected data: impact of temporal data representation
+
+## Aims and objectives
+<p>The overall aim of this project is to develop and evaluate predictive models for prolonged length of stay in ICUs using routinely collected data. This study will approach this with a focus on representations of temporal clinical data and investigate how these influence model performance.</p>
+
+## Software
+- Windows 11
+- postgresql 18.4
+- VS Code
+- Git 
+- Git Bash
+
+
+## Setup
+The PostgreSQL schemas and tables were created using the create.sql script from the MIMIC Code repository (https://github.com/MIT-LCP/mimic-code/tree/main). This script was run against a PostgreSQL 18.4 database before importing any data.
+Data were imported using the load_gz.sql script from the MIMIC code repository. Due to limitations to local storage, tables were imported individually by temporarily commenting out only the required \COPY statements.
+The project assumes:
+
+- PostgreSQL database: mimiciv
+- PostgreSQL user: postgres
+- MIMIC-IV version: 3.1
+
+The path to the MIMIC-IV source data is supplied when running the import scripts using the `mimic_data_dir` variable.
+
+## Dependencies
+
+## Usage guidelines
+
+## DATASETS
+NB MIMIC IV data are not stored in this repository.<br>
+Description here of the MIMIC IV dataset and how it has been accessed, access limitations etc.<br>
+
+
+## SCRIPTS
+
+
+

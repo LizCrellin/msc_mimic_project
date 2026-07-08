@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# Data
+data/
+*.csv
+*.csv.gz
+
+# PostgreSQL exports
+*.sql.bak
+*.dump
+*.backup
+
+# OS files
+.DS_Store
+Thumbs.db

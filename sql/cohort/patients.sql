@@ -1,6 +1,26 @@
---This script is adapted from the MIMIC repository script 'icustay_detail.sql'.
---Aims to get a view showing all icu stays with demographic info from patient and admissions tables.
---Then creates a view limiting to first icu stay for each patient, and only icu stays of at least 1 day, also checking patient age at admission is >= 18.
+-- -----------------------------------------------------------------------------
+-- Based on the official MIMIC Code repository:
+-- https://github.com/MIT-LCP/mimic-code
+--
+-- Original file:
+-- mimic-iv/buildmimic/concepts_postgres/demographics/icustay_detail.sql
+--
+-- Accessed: 13 July 2026
+--
+-- Modifications:
+-- - Creation of views rather than tables
+-- - Addition of separate view, providing a list of all ICU stays that meet inclusion criteria for the project:
+-- - - First ICU stay for each patient
+-- - - ICU stay of at least 1 day
+-- - - Patient age at admission >= 18
+-- - No other changes
+--
+-- TO DO:
+-- - add more features from admission and patients table based on feature list
+-- -----------------------------------------------------------------------------
+
+
+
 
 CREATE OR REPLACE VIEW msc_project.allpatients AS
 

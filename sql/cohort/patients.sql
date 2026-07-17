@@ -13,10 +13,11 @@
 -- - - First ICU stay for each patient
 -- - - ICU stay of at least 1 day
 -- - - Patient age at admission >= 18
+-- - - Added admission type and admission location
 -- - No other changes
 --
 -- TO DO:
--- - add more features from admission and patients table based on feature list
+-- 
 -- -----------------------------------------------------------------------------
 
 DROP VIEW msc_project.first_icu_stays;

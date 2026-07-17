@@ -10,6 +10,7 @@
 - VS Code
 - Git 
 - Git Bash
+- PostgreSQL extension for VS Code by Chris Kolkman
 
 
 ## Setup
@@ -23,7 +24,7 @@ The project assumes:
 
 The path to the MIMIC-IV source data is supplied when running the import scripts using the `mimic_data_dir` variable.<br>
 
-The extension PostgreSQL by Chris Kolkman was installed to enable running of SQL queries direct. The connection to the db for this sometimes needs refresh (right-click and Refresh Items from the mimiciv db in the Postresql explorer).<br>
+The extension PostgreSQL by Chris Kolkman was installed to enable running of SQL queries direct. Need to select connection (Command Palette, PostgreSQL: Select Connection).<br>
 
 I also run full scripts via Git Bash:<br>
 psql -U postgres -d mimiciv
@@ -31,6 +32,12 @@ psql -U postgres -d mimiciv
 psql -U postgres -d mimiciv -v mimic_data_dir="Z:/MSc/mimic-iv-3.1" -f load_gz_stepwise.sql
 - Command to run a script:<br>
 psql -U postgres -d mimiciv -f load_icustays.sql
+
+overall using:<br>
+- VS Code for editing and Git version control.
+- PostgreSQL extension for running ad hoc queries (with Select Connection at the start of a session).
+- psql -f in Git Bash for running complete setup/import pipelines and reproducible scripts.
+- pgAdmin for browsing data and checking results when it's more convenient.
 
 
 ## Dependencies

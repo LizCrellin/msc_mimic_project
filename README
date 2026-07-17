@@ -13,15 +13,25 @@
 
 
 ## Setup
-The PostgreSQL schemas and tables were created using the create.sql script from the MIMIC Code repository (https://github.com/MIT-LCP/mimic-code/tree/main). This script was run against a PostgreSQL 18.4 database before importing any data.
-Data were imported using the load_gz.sql script from the MIMIC code repository. Due to limitations to local storage, tables were imported individually by temporarily commenting out only the required \COPY statements.
+The PostgreSQL schemas and tables were created using the create.sql script from the MIMIC Code repository (https://github.com/MIT-LCP/mimic-code/tree/main). This script was run against a PostgreSQL 18.4 database before importing any data.<br>
+Data were imported using the load_gz.sql script from the MIMIC code repository. Due to limitations to local storage, tables were imported individually by temporarily commenting out only the required \COPY statements.<br>
 The project assumes:
 
 - PostgreSQL database: mimiciv
 - PostgreSQL user: postgres
 - MIMIC-IV version: 3.1
 
-The path to the MIMIC-IV source data is supplied when running the import scripts using the `mimic_data_dir` variable.
+The path to the MIMIC-IV source data is supplied when running the import scripts using the `mimic_data_dir` variable.<br>
+
+The extension PostgreSQL by Chris Kolkman was installed to enable running of SQL queries direct. The connection to the db for this sometimes needs refresh (right-click and Refresh Items from the mimiciv db in the Postresql explorer).<br>
+
+I also run full scripts via Git Bash:<br>
+psql -U postgres -d mimiciv
+- Command to import a file:<br>
+psql -U postgres -d mimiciv -v mimic_data_dir="Z:/MSc/mimic-iv-3.1" -f load_gz_stepwise.sql
+- Command to run a script:<br>
+psql -U postgres -d mimiciv -f load_icustays.sql
+
 
 ## Dependencies
 

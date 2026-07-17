@@ -19,10 +19,10 @@
 -- - add more features from admission and patients table based on feature list
 -- -----------------------------------------------------------------------------
 
+DROP VIEW msc_project.first_icu_stays;
+DROP VIEW msc_project.allpatients;
 
-
-
-CREATE OR REPLACE VIEW msc_project.allpatients AS
+CREATE VIEW msc_project.allpatients AS
 
 SELECT
   ie.subject_id,
@@ -32,6 +32,8 @@ SELECT
   pat.dod, /* hospital level factors */
   adm.admittime,
   adm.dischtime,
+  adm.admission_type,
+  adm.admission_location,
   (CAST(adm.dischtime AS DATE) - CAST(adm.admittime AS DATE)) AS los_hospital, /* calculate the age as anchor_age (60) plus difference between */ /* admit year and the anchor year. */ /* the noqa retains the extra long line so the */ /* convert to postgres bash script works */
   pat.anchor_age + CAST(EXTRACT(YEAR FROM adm.admittime) - EXTRACT(YEAR FROM MAKE_TIMESTAMP(pat.anchor_year, 1, 1, 0, 0, 0)) AS BIGINT) AS admission_age, /* noqa: L016 */
   adm.race,

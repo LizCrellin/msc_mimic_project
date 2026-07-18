@@ -11,6 +11,7 @@
 - Git 
 - Git Bash
 - PostgreSQL extension for VS Code by Chris Kolkman
+- Python (see requirements.txt)
 
 
 ## Setup
@@ -38,6 +39,8 @@ overall using:<br>
 - PostgreSQL extension for running ad hoc queries (with Select Connection at the start of a session).
 - psql -f in Git Bash for running complete setup/import pipelines and reproducible scripts.
 - pgAdmin for browsing data and checking results when it's more convenient.
+
+
 
 
 ## Dependencies

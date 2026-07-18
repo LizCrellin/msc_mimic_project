@@ -1,3 +1,14 @@
+############################################################################################
+# File: python/setup/filter_chartevents.py
+# Created: 18 July 2026
+# Modifications:
+# 
+# TO DO:
+# # Adapt this and filter_labevents.py as one function taking input_file, itemid_file, 
+# # output_file as arguments.
+############################################################################################
+
+
 import pandas as pd
 from pathlib import Path
 
@@ -41,3 +52,20 @@ for chunk in pd.read_csv(input_file, chunksize = 500000):
 
 print(f"Filtered chartevents saved to {output_file}")
 
+# Check the no of rows for each itemid in the filtered file
+filtered = pd.read_csv(
+    output_file,
+    usecols=["itemid"],
+    chunksize=1_000_000
+)
+
+counts = {}
+
+for chunk in filtered:
+    vc = chunk["itemid"].value_counts()
+    for itemid, n in vc.items():
+        counts[itemid] = counts.get(itemid, 0) + n
+
+print(counts)
+for itemid, count in sorted(counts.items()):
+    print(f"| {itemid} | {count:,} |")

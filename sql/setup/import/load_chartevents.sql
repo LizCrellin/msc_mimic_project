@@ -7,10 +7,15 @@
 
 \cd :mimic_data_dir
 
--- making sure that all tables are emtpy and correct encoding is defined -utf8- 
+-- making sure that all tables are empty and correct encoding is defined -utf8- 
 SET CLIENT_ENCODING TO 'utf8';
 
 --icu schema
 \cd icu
 
-\COPY mimiciv_icu.chartevents FROM PROGRAM 'gzip -dc chartevents.csv.gz' DELIMITER ',' CSV HEADER NULL '';
+-- Loading the filtered table into the icu schema 
+\COPY mimiciv_icu.chartevents
+FROM 'chartevents_filtered.csv'
+DELIMITER ','
+CSV HEADER
+NULL '';

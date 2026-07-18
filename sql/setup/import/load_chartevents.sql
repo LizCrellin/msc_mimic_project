@@ -14,8 +14,4 @@ SET CLIENT_ENCODING TO 'utf8';
 \cd icu
 
 -- Loading the filtered table into the icu schema 
-\COPY mimiciv_icu.chartevents
-FROM 'chartevents_filtered.csv'
-DELIMITER ','
-CSV HEADER
-NULL '';
+\COPY mimiciv_icu.chartevents FROM 'chartevents_filtered.csv' DELIMITER ',' CSV HEADER NULL '';

@@ -16,7 +16,7 @@
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW msc_project.vitalsign;
+DROP VIEW IF EXISTS msc_project.vitalsign;
 CREATE VIEW msc_project.vitalsign AS
 
 /* This query pivots the vital signs for the entire patient stay. */ /* The result is a table with stay_id, charttime, and various */ /* vital signs, with one row per charted time. */

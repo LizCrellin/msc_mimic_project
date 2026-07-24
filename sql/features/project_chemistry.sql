@@ -18,7 +18,7 @@
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW msc_project.chemistry;
+DROP VIEW IF EXISTS msc_project.chemistry;
 CREATE VIEW msc_project.chemistry AS
 
 /* extract chemistry labs */ /* excludes point of care tests (very rare) */ /* blood gas measurements are *not* included in this query */ /* instead they are in bg.sql */

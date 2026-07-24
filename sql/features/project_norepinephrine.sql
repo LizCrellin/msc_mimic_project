@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -17,9 +16,6 @@
 -- -----------------------------------------------------------------------------
 
 
-
-DROP VIEW msc_project.norepinephrine;
-CREATE VIEW msc_project.norepinephrine AS
 
 DROP TABLE IF EXISTS mimiciv_derived.norepinephrine; CREATE TABLE mimiciv_derived.norepinephrine AS
 /* This query extracts dose+durations of norepinephrine administration */ /* Local hospital dosage guidance: 0.03 mcg/kg/min (low), 0.5 mcg/kg/min (high) */

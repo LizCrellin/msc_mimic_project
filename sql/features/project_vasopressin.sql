@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -17,9 +16,6 @@
 -- -----------------------------------------------------------------------------
 
 
-
-DROP VIEW msc_project.vasopressin;
-CREATE VIEW msc_project.vasopressin AS
 
 DROP TABLE IF EXISTS mimiciv_derived.vasopressin; CREATE TABLE mimiciv_derived.vasopressin AS
 /* This query extracts dose+durations of vasopressin administration */ /* Local hospital dosage guidance: 1.2 units/hour (low) - 2.4 units/hour (high) */

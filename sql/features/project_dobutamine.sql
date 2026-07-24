@@ -8,18 +8,14 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
--- - can simplify further?
+-- - can simplify as only need start and end times I think
 --
 -- -----------------------------------------------------------------------------
 
 
-
-DROP VIEW msc_project.dobutamine;
-CREATE VIEW msc_project.dobutamine AS
 DROP TABLE IF EXISTS mimiciv_derived.dobutamine; CREATE TABLE mimiciv_derived.dobutamine AS
 /* This query extracts dose+durations of dobutamine administration */ /* Local hospital dosage guidance: 2 mcg/kg/min (low) - 40 mcg/kg/min (max) */
 SELECT

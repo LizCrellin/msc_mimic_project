@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -16,9 +15,6 @@
 --
 -- -----------------------------------------------------------------------------
 
-
-DROP VIEW msc_project.phenylephrine;
-CREATE VIEW msc_project.phenylephrine AS
 
 DROP TABLE IF EXISTS mimiciv_derived.phenylephrine; CREATE TABLE mimiciv_derived.phenylephrine AS
 /* This query extracts dose+durations of phenylephrine administration */ /* Local hospital dosage guidance: 0.5 mcg/kg/min (low) - 5 mcg/kg/min (high) */

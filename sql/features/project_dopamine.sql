@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -16,9 +15,6 @@
 --
 -- -----------------------------------------------------------------------------
 
-
-DROP VIEW msc_project.dopamine;
-CREATE VIEW msc_project.dopamine AS
 
 DROP TABLE IF EXISTS mimiciv_derived.dopamine; CREATE TABLE mimiciv_derived.dopamine AS
 /* This query extracts dose+durations of dopamine administration */ /* Local hospital dosage guidance: 2 mcg/kg/min (low) - 10 mcg/kg/min (high) */

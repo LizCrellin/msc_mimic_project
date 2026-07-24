@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -16,8 +15,6 @@
 --
 -- -----------------------------------------------------------------------------
 
-DROP VIEW msc_project.epinephrine;
-CREATE VIEW msc_project.epinephrine AS
 
 DROP TABLE IF EXISTS mimiciv_derived.epinephrine; CREATE TABLE mimiciv_derived.epinephrine AS
 /* This query extracts dose+durations of epinephrine administration */ /* Local hospital dosage guidance: 0.2 mcg/kg/min (low) - 2 mcg/kg/min (high) */

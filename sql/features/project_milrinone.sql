@@ -8,7 +8,6 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
 -- - Removed rate and amount.
 --
 -- TO DO:
@@ -17,8 +16,6 @@
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW msc_project.milrinone;
-CREATE VIEW msc_project.milrinone AS
 
 DROP TABLE IF EXISTS mimiciv_derived.milrinone; CREATE TABLE mimiciv_derived.milrinone AS
 /* This query extracts dose+durations of milrinone administration */ /* Local hospital dosage guidance: 0.5 mcg/kg/min (usual) */

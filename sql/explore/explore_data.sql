@@ -74,3 +74,25 @@ ORDER BY label;
 SELECT itemid, label
 FROM mimiciv_icu.d_items
 ORDER BY label;
+
+--investigate this code for RDW SD:
+SELECT itemid, label
+FROM mimiciv_hosp.d_labitems
+WHERE itemid = 52159;
+
+SELECT itemid, label
+FROM mimiciv_hosp.d_labitems
+WHERE LOWER(label) LIKE '%rdw%';
+
+
+--look at view for vital signs
+select * from msc_project.vitalsign LIMIT 20;
+
+--look at view for lab events
+select * from msc_project.chemistry LIMIT 20;
+
+--look at view for complete blood count
+select * from msc_project.complete_blood_count LIMIT 20;
+
+--look at view for gcs
+select * from msc_project.gcs LIMIT 20;

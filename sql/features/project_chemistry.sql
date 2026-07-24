@@ -9,7 +9,7 @@
 --
 -- Modifications:
 -- - Creation of views rather than tables
--- - No other changes
+-- - Added magnesium (itemid code 50960)
 --
 -- TO DO:
 -- 
@@ -24,7 +24,7 @@ SELECT
   MAX(subject_id) AS subject_id,
   MAX(hadm_id) AS hadm_id,
   MAX(charttime) AS charttime,
-  le.specimen_id, /* convert from itemid into a meaningful column */
+  le.specimen_id, /* convert from itemid into a meaningful column */            -- Review physiological plausibility limits for each lab value after import.
   MAX(CASE WHEN itemid = 50862 AND valuenum <= 10 THEN valuenum ELSE NULL END) AS albumin,
   MAX(CASE WHEN itemid = 50930 AND valuenum <= 10 THEN valuenum ELSE NULL END) AS globulin,
   MAX(CASE WHEN itemid = 50976 AND valuenum <= 20 THEN valuenum ELSE NULL END) AS total_protein,
@@ -36,7 +36,8 @@ SELECT
   MAX(CASE WHEN itemid = 50912 AND valuenum <= 150 THEN valuenum ELSE NULL END) AS creatinine,
   MAX(CASE WHEN itemid = 50931 AND valuenum <= 10000 THEN valuenum ELSE NULL END) AS glucose,
   MAX(CASE WHEN itemid = 50983 AND valuenum <= 200 THEN valuenum ELSE NULL END) AS sodium,
-  MAX(CASE WHEN itemid = 50971 AND valuenum <= 30 THEN valuenum ELSE NULL END) AS potassium
+  MAX(CASE WHEN itemid = 50971 AND valuenum <= 30 THEN valuenum ELSE NULL END) AS potassium,
+  MAX(CASE WHEN itemid = 50960 THEN valuenum ELSE NULL END) AS magnesium     -- identify physiological plausibility limit for magnesium after importing the data
 FROM mimiciv_hosp.labevents AS le
 WHERE
   le.itemid IN (
@@ -51,7 +52,8 @@ WHERE
     50931, /* GLUCOSE | CHEMISTRY | BLOOD | 748981 */ /* 52525, Glucose, point of care */ /* 52566, -- Potassium, point of care */
     50971, /* POTASSIUM | CHEMISTRY | BLOOD | 845825 */ /* 52579, -- Sodium, point of care */
     50983, /* SODIUM | CHEMISTRY | BLOOD | 808489 */ /* 52603, Urea, point of care */
-    51006 /* UREA NITROGEN | CHEMISTRY | BLOOD | 791925 */
+    51006, /* UREA NITROGEN | CHEMISTRY | BLOOD | 791925 */
+    50960  /* MAGNESIUM | CHEMISTRY | BLOOD |  */
   )
   AND NOT valuenum IS NULL
   AND /* lab values cannot be 0 and cannot be negative */ /* .. except anion gap. */ (

@@ -1,0 +1,34 @@
+-- -----------------------------------------------------------------------------
+-- Based on the official MIMIC Code repository:
+-- https://github.com/MIT-LCP/mimic-code
+--
+-- Original file:
+-- mimic-iv/buildmimic/concepts_postgres/medication/milrinone.sql
+--
+-- Accessed: 24 July 2026
+--
+-- Modifications:
+-- - Creation of views rather than tables
+-- - Removed rate and amount.
+--
+-- TO DO:
+-- - can simplify further?
+--
+-- -----------------------------------------------------------------------------
+
+
+DROP VIEW msc_project.milrinone;
+CREATE VIEW msc_project.milrinone AS
+
+DROP TABLE IF EXISTS mimiciv_derived.milrinone; CREATE TABLE mimiciv_derived.milrinone AS
+/* This query extracts dose+durations of milrinone administration */ /* Local hospital dosage guidance: 0.5 mcg/kg/min (usual) */
+SELECT
+  stay_id,
+  linkorderid, /* all rows in mcg/kg/min */
+  --rate AS vaso_rate,
+  --amount AS vaso_amount,
+  starttime,
+  endtime
+FROM mimiciv_icu.inputevents
+WHERE
+  itemid = 221986 /* milrinone */

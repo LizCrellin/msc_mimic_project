@@ -12,6 +12,8 @@
 -- - Added magnesium (itemid code 50960)
 --
 -- TO DO:
+-- - Add physiological plausibile limit for magnesium 
+-- - Review physiological plausibility limits for each lab value after import.
 -- 
 -- -----------------------------------------------------------------------------
 

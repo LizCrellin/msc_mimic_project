@@ -9,12 +9,13 @@
 --
 -- Modifications:
 -- - Creation of views rather than tables
+-- - Simplified as only need GCS score not individual components.
 --
 -- TO DO:
--- - simplify as only need GCS score not individual components.
+-- 
 -- -----------------------------------------------------------------------------
 
-DROP VIEW msc_project.gcs;
+DROP VIEW IF EXISTS msc_project.gcs;
 CREATE VIEW msc_project.gcs AS
 /* This query extracts the Glasgow Coma Scale, a measure of neurological */ /* function. */ /* The query has a few special rules: */ /*    (1) The verbal component can be set to 0 if the patient is ventilated. */ /*    This is corrected to 5 - the overall GCS is set to 15 in these cases. */ /*    (2) Often only one of three components is documented. The other components */ /*    are carried forward. */ /* ITEMIDs used: */ /* METAVISION */ /*    223900 GCS - Verbal Response */ /*    223901 GCS - Motor Response */ /*    220739 GCS - Eye Opening */ /* Note: */ /*  The GCS for sedated patients is defaulted to 15 in this code. */ /*  This is in line with how the data is meant to be collected. */ /*  e.g., from the SAPS II publication: */ /*    For sedated patients, the Glasgow Coma Score before sedation was used. */ /*    This was ascertained either from interviewing the physician who ordered */ /*    the sedation, or by reviewing the patient's medical record. */
 WITH base AS (
@@ -69,21 +70,23 @@ WITH base AS (
     subject_id,
     gs.stay_id,
     gs.charttime,
-    gcs,
-    COALESCE(gcsmotor, gcsmotorprev) AS gcsmotor,
-    COALESCE(gcsverbal, gcsverbalprev) AS gcsverbal,
-    COALESCE(gcseyes, gcseyesprev) AS gcseyes,
-    CASE WHEN COALESCE(gcsmotor, gcsmotorprev) IS NULL THEN 0 ELSE 1 END + CASE WHEN COALESCE(gcsverbal, gcsverbalprev) IS NULL THEN 0 ELSE 1 END + CASE WHEN COALESCE(gcseyes, gcseyesprev) IS NULL THEN 0 ELSE 1 END AS components_measured,
-    endotrachflag
+    gcs
+    --,
+    --COALESCE(gcsmotor, gcsmotorprev) AS gcsmotor,
+    --COALESCE(gcsverbal, gcsverbalprev) AS gcsverbal,
+    --COALESCE(gcseyes, gcseyesprev) AS gcseyes,
+    --CASE WHEN COALESCE(gcsmotor, gcsmotorprev) IS NULL THEN 0 ELSE 1 END + CASE WHEN COALESCE(gcsverbal, gcsverbalprev) IS NULL THEN 0 ELSE 1 END + CASE WHEN COALESCE(gcseyes, gcseyesprev) IS NULL THEN 0 ELSE 1 END AS components_measured,
+    --endotrachflag
   FROM gcs AS gs
 )
 SELECT
   gs.subject_id,
   gs.stay_id,
   gs.charttime,
-  gcs,
-  gcsmotor AS gcs_motor,
-  gcsverbal AS gcs_verbal,
-  gcseyes AS gcs_eyes,
-  endotrachflag AS gcs_unable
+  gcs
+  --,
+  --gcsmotor AS gcs_motor,
+  --gcsverbal AS gcs_verbal,
+  --gcseyes AS gcs_eyes,
+  --endotrachflag AS gcs_unable
 FROM gcs_stg AS gs

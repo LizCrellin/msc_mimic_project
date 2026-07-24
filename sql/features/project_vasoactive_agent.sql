@@ -13,14 +13,16 @@
 --
 -- TO DO:
 -- - Look at simplifying further.
+-- - Add code to run each vasoactive agent script prior to creation of this view?
 --
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW msc_project.vasoactive_agent;
+--code to run each vasoactive agent in turn here.
+
+DROP VIEW IF EXISTS msc_project.vasoactive_agent;
 CREATE VIEW msc_project.vasoactive_agent AS
 
-DROP TABLE IF EXISTS mimiciv_derived.vasoactive_agent; CREATE TABLE mimiciv_derived.vasoactive_agent AS
 /* This query creates a single table with ongoing doses of vasoactive agents. */ /* TBD: rarely angiotensin II, methylene blue, and */ /* isoprenaline/isoproterenol are used. These are not in the query currently */ /* as they are not documented in MetaVision. However, they could */ /* be documented in other hospital wide systems. */ /* collect all vasopressor administration times */ /* create a single table with these as start/stop times */
 WITH tm AS (
   SELECT

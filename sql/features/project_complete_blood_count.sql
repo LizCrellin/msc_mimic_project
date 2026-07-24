@@ -15,7 +15,7 @@
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW msc_project.complete_blood_count;
+DROP VIEW IF EXISTS msc_project.complete_blood_count;
 CREATE VIEW msc_project.complete_blood_count AS
 /* begin query that extracts the data */
 SELECT
@@ -44,7 +44,7 @@ WHERE
     51265, /* platelets */
     51279, /* RBC */
     51277, /* RDW */
-    52159, /* RDW SD */
+    --52159, /* RDW SD */
     51301 /* WBC */
   )
   AND NOT valuenum IS NULL

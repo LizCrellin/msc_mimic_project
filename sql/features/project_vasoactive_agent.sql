@@ -8,17 +8,26 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
+-- - Creation of view rather than table
 -- - Removed derivation of rates
+-- - Added code to run each individual vasoactive agent script prior to creating the view
 --
 -- TO DO:
 -- - Look at simplifying further.
--- - Add code to run each vasoactive agent script prior to creation of this view?
 --
 -- -----------------------------------------------------------------------------
 
 
---code to run each vasoactive agent in turn here.
+
+--First run each of the individual drug scripts
+-- \i sql/features/project_dobutamine.sql
+-- \i sql/features/project_dopamine.sql
+-- \i sql/features/project_epinephrine.sql
+-- \i sql/features/project_milrinone.sql
+-- \i sql/features/project_norepinephrine.sql
+-- \i sql/features/project_phenylephrine.sql
+-- \i sql/features/project_vasopressin.sql
+
 
 DROP VIEW IF EXISTS msc_project.vasoactive_agent;
 CREATE VIEW msc_project.vasoactive_agent AS
@@ -106,14 +115,15 @@ WITH tm AS (
 SELECT
   t.stay_id,
   t.starttime,
-  t.endtime, /* inopressors/vasopressors */
- -- dop.vaso_rate AS dopamine, /* mcg/kg/min */
- -- epi.vaso_rate AS epinephrine, /* mcg/kg/min */
- -- nor.vaso_rate AS norepinephrine, /* mcg/kg/min */
- -- phe.vaso_rate AS phenylephrine, /* mcg/kg/min */
- -- vas.vaso_rate AS vasopressin, /* units/hour */ /* inodialators */
- -- dob.vaso_rate AS dobutamine, /* mcg/kg/min */
- -- mil.vaso_rate AS milrinone /* mcg/kg/min */
+  t.endtime
+  -- , /* inopressors/vasopressors */
+-- dop.vaso_rate AS dopamine, /* mcg/kg/min */
+-- epi.vaso_rate AS epinephrine, /* mcg/kg/min */
+-- nor.vaso_rate AS norepinephrine, /* mcg/kg/min */
+-- phe.vaso_rate AS phenylephrine, /* mcg/kg/min */
+-- vas.vaso_rate AS vasopressin, /* units/hour */ /* inodialators */
+-- dob.vaso_rate AS dobutamine, /* mcg/kg/min */
+-- mil.vaso_rate AS milrinone /* mcg/kg/min */
 /* isoproterenol is used in CCU/CVICU but not in metavision */ /* other drugs not included here but (rarely) used in the BIDMC: */ /* angiotensin II, methylene blue */
 FROM tm_lag AS t
 LEFT JOIN mimiciv_derived.dobutamine AS dob

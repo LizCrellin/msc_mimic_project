@@ -17,7 +17,8 @@
 -- - No other changes
 --
 -- TO DO:
--- 
+-- - could add checks e.g. that icu intime is after hosp admission 
+--
 -- -----------------------------------------------------------------------------
 
 DROP VIEW msc_project.first_icu_stays;
@@ -64,11 +65,16 @@ INNER JOIN mimiciv_hosp.patients AS pat
   ON ie.subject_id = pat.subject_id;
   
 
+-- Another view keeping only what's needed to make events panel for first 24 hours
 CREATE OR REPLACE VIEW msc_project.first_icu_stays AS
 SELECT
   subject_id,
   hadm_id,
-  stay_id 
+  stay_id,
+  dod,
+  hospital_expire_flag,
+  icu_intime,
+  icu_outtime
 FROM msc_project.allpatients
 WHERE first_icu_stay = TRUE
 AND los_icu >= 1

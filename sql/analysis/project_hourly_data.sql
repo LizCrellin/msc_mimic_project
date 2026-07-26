@@ -53,7 +53,7 @@ vitalsigns_hourly AS
         ON v.stay_id = ch.stay_id
         AND v.charttime > ch.hour_end - INTERVAL '1' HOUR
         AND v.charttime < ch.hour_end
-    GROUP BY ch.stay_id
+    GROUP BY ch.stay_id, ch.hr
 )
 SELECT
     ch.stay_id,

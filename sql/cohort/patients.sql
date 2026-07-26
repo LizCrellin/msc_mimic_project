@@ -8,24 +8,26 @@
 -- Accessed: 13 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
--- - Addition of separate view, providing a list of all ICU stays that meet inclusion criteria for the project:
+-- - Creation of view rather than tables
+-- - Limits the output to ICU stays that meet inclusion criteria for the project:
 -- - - First ICU stay for each patient
 -- - - ICU stay of at least 1 day
 -- - - Patient age at admission >= 18
 -- - - Added admission type and admission location
--- - No other changes
+-- - Does not retain flags for first hospital or ICU stay_id or stay sequence
+-- - Does not retain 
 --
 -- TO DO:
 -- - could add checks e.g. that icu intime is after hosp admission 
 --
 -- -----------------------------------------------------------------------------
 
-DROP VIEW msc_project.first_icu_stays;
-DROP VIEW msc_project.allpatients;
+DROP VIEW IF EXISTS msc_project.allpatients;
 
 CREATE VIEW msc_project.allpatients AS
 
+WITH allpatients AS
+(
 SELECT
   ie.subject_id,
   ie.hadm_id,
@@ -62,20 +64,23 @@ FROM mimiciv_icu.icustays AS ie
 INNER JOIN mimiciv_hosp.admissions AS adm
   ON ie.hadm_id = adm.hadm_id
 INNER JOIN mimiciv_hosp.patients AS pat
-  ON ie.subject_id = pat.subject_id;
-  
-
--- Another view keeping only what's needed to make events panel for first 24 hours
-CREATE OR REPLACE VIEW msc_project.first_icu_stays AS
+  ON ie.subject_id = pat.subject_id
+)
 SELECT
   subject_id,
   hadm_id,
   stay_id,
+  gender,
   dod,
+  admittime,
+  dischtime,
+  admission_type,
+  admission_location,
+  admission_age,
+  race,
   hospital_expire_flag,
-  icu_intime,
-  icu_outtime
-FROM msc_project.allpatients
+  los_icu
+FROM allpatients
 WHERE first_icu_stay = TRUE
 AND los_icu >= 1
 AND admission_age >= 18;

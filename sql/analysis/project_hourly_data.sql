@@ -19,7 +19,7 @@
 
 DROP VIEW IF EXISTS msc_project.hourly_data;
 
-CREATE VIEW msc_project.hourly_data AS mimiciv_derived
+CREATE VIEW msc_project.hourly_data AS
 
 with cohort_hours AS
 (

@@ -26,8 +26,8 @@ with cohort_hours AS
     SELECT
         p.stay_id,
         p.hadm_id,
-        h.hr
-        h.endtime
+        h.hr,
+        h.hour_end
     FROM msc_project.icustay_hourly AS h
     INNER JOIN msc_project.allpatients AS p
         ON h.stay_id = p.stay_id
@@ -41,7 +41,7 @@ vitalsigns_hourly AS
         AVG(v.sbp) AS sbp,
         AVG(v.dbp) AS dbp,
         AVG(v.mbp) AS mbp,
-        AVG(v.sbp_ni) AS sbp_ni
+        AVG(v.sbp_ni) AS sbp_ni,
         AVG(v.dbp_ni) AS dbp_ni,
         AVG(v.mbp_ni) AS mbp_ni,
         AVG(v.resp_rate) AS resp_rate,
@@ -51,18 +51,18 @@ vitalsigns_hourly AS
     FROM cohort_hours as ch
     INNER JOIN msc_project.vitalsign AS v
         ON v.stay_id = ch.stay_id
-        AND v.charttime > ch.endtime - INTERVAL '1' HOUR
-        AND v.charttime < ch.endtime
+        AND v.charttime > ch.hour_end - INTERVAL '1' HOUR
+        AND v.charttime < ch.hour_end
     GROUP BY ch.stay_id
 )
 SELECT
     ch.stay_id,
-    ch.hr
-    ch.endtime
+    ch.hr,
+    ch.hour_end,
     vh.heart_rate,
     vh.sbp,
     vh.dbp,
-    vh.mbp
+    vh.mbp,
     vh.sbp_ni,
     vh.dbp_ni,
     vh.mbp_ni,

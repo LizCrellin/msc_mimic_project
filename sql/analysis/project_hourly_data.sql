@@ -13,6 +13,9 @@
 -- the same stay.
 --
 -- TO DO:
+-- Addition of GCS (also from ICU stay and linked on stay id), and
+-- lab data and bloods (from hosp table and linked on hadm id).
+-- Later: consider adding intervention events.
 --
 -- -----------------------------------------------------------------------------
 

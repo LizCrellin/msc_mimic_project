@@ -5,11 +5,11 @@
 -- Original file:
 -- mimic-iv/buildmimic/concepts_postgres/measurement/vitalsign.sql
 --
--- Accessed: 17 July 2026
+-- Accessed and adapted: 17 July 2026
 --
 -- Modifications:
 -- - Creation of views rather than tables
--- - No other changes
+-- - 2026-07-26 dropped temperature site (commented out)
 --
 -- TO DO:
 -- 
@@ -67,7 +67,7 @@ SELECT
     ) AS DECIMAL(38, 9)),
     2
   ) AS temperature,
-  MAX(CASE WHEN itemid = 224642 THEN value END) AS temperature_site,
+  --MAX(CASE WHEN itemid = 224642 THEN value END) AS temperature_site,
   AVG(
     CASE WHEN itemid IN (220277) AND valuenum > 0 AND valuenum <= 100 THEN valuenum END
   ) AS spo2,
@@ -94,7 +94,7 @@ WHERE
     226537, /* Glucose (whole blood) */ /* TEMPERATURE */ /* 226329 -- Blood Temperature CCO (C) */
     223762, /* "Temperature Celsius" */
     223761, /* "Temperature Fahrenheit" */
-    224642 /* Temperature Site */
+    --224642 /* Temperature Site */
   )
 GROUP BY
   ce.subject_id,

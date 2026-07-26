@@ -1,4 +1,7 @@
 select * from msc_project.allpatients LIMIT 10;
+select * from msc_project.first_icu_stays LIMIT 10;
+select * from msc_project.icustay_hourly LIMIT 100;
+
 select count(*) from mimiciv_icu.chartevents;
 
 
@@ -86,6 +89,7 @@ WHERE LOWER(label) LIKE '%rdw%';
 
 
 --look at view for vital signs
+EXPLAIN(ANALYZE)
 select * from msc_project.vitalsign LIMIT 20;
 
 --look at view for lab events
@@ -96,3 +100,17 @@ select * from msc_project.complete_blood_count LIMIT 20;
 
 --look at view for gcs
 select * from msc_project.gcs LIMIT 20;
+
+--look at view for vasoactive agents
+select * from msc_project.vasoactive_agent LIMIT 20;
+
+--look at view for ventilation times
+select * from msc_project.ventdurations LIMIT 20;
+
+
+-------------
+--look at project hourly data with vital signs added:
+EXPLAIN(ANALYZE)
+select * from msc_project.hourly_data LIMIT 20;
+--select * from msc_project.hourly_data --cancelled this as took too long.
+--where stay_id = 30000213;

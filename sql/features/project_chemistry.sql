@@ -7,8 +7,7 @@
 --
 -- Accessed: 18 July 2026
 --
--- Modifications:
--- - Creation of views rather than tables
+-- Modifications compared to original file:
 -- - Added magnesium (itemid code 50960)
 --
 -- TO DO:
@@ -18,9 +17,9 @@
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW IF EXISTS msc_project.chemistry;
-CREATE VIEW msc_project.chemistry AS
-
+--DROP VIEW IF EXISTS msc_project.chemistry;
+--CREATE VIEW msc_project.chemistry AS
+DROP TABLE IF EXISTS mimiciv_derived.chemistry; CREATE TABLE mimiciv_derived.chemistry AS
 /* extract chemistry labs */ /* excludes point of care tests (very rare) */ /* blood gas measurements are *not* included in this query */ /* instead they are in bg.sql */
 SELECT
   MAX(subject_id) AS subject_id,
@@ -62,4 +61,6 @@ WHERE
     valuenum > 0 OR itemid = 50868
   )
 GROUP BY
-  le.specimen_id
+  le.specimen_id;
+CREATE INDEX ix_chemistry_hadm_charttime
+    ON mimiciv_derived.chemistry(stay_id, charttime);

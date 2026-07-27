@@ -8,16 +8,16 @@
 -- Accessed and adapted: 17 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
--- - 2026-07-26 dropped temperature site (commented out)
+-- - 2026-07-26 dropped temperature site (commented out) as not required
 --
 -- TO DO:
 -- 
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW IF EXISTS msc_project.vitalsign;
-CREATE VIEW msc_project.vitalsign AS
+--DROP VIEW IF EXISTS msc_project.vitalsign;
+--CREATE VIEW msc_project.vitalsign AS
+DROP TABLE IF EXISTS mimiciv_derived.vitalsign; CREATE TABLE mimiciv_derived.vitalsign AS
 
 /* This query pivots the vital signs for the entire patient stay. */ /* The result is a table with stay_id, charttime, and various */ /* vital signs, with one row per charted time. */
 SELECT
@@ -93,10 +93,14 @@ WHERE
     220621, /* Glucose (serum) */
     226537, /* Glucose (whole blood) */ /* TEMPERATURE */ /* 226329 -- Blood Temperature CCO (C) */
     223762, /* "Temperature Celsius" */
-    223761, /* "Temperature Fahrenheit" */
+    223761
+    --, /* "Temperature Fahrenheit" */
     --224642 /* Temperature Site */
   )
 GROUP BY
   ce.subject_id,
   ce.stay_id,
-  ce.charttime
+  ce.charttime;
+--Create index on stay_id and charttime for later joining with other tables based on stay and time.
+CREATE INDEX ix_vitalsign_stay_charttime
+    ON mimiciv_derived.vitalsign(stay_id, charttime);

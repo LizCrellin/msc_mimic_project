@@ -52,10 +52,35 @@ vitalsigns_hourly AS
         AVG(v.spo2) AS spo2,
         AVG(v.glucose) AS glucose_vital
     FROM cohort_hours as ch
-    INNER JOIN msc_project.vitalsign AS v
+    INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = ch.stay_id
         AND v.charttime > ch.hour_end - INTERVAL '1' HOUR
         AND v.charttime < ch.hour_end
+    GROUP BY ch.stay_id, ch.hr
+),
+chemistry_hourly AS
+(
+    SELECT
+        ch.stay_id,
+        ch.hr,
+        avg(c.albumin) AS albumin,
+        avg(c.globulin) AS globulin,
+        avg(c.total_protein) AS total_protein,
+        avg(c.aniongap) as aniongap,
+        avg(c.bicarbonate) as bicarbonate,
+        avg(c.bun) as bun,
+        avg(c.calcium) as calcium,
+        avg(c.chloride) as chloride,
+        avg(c.creatinine) as creatinine,
+        avg(c.glucose) as glucose,
+        avg(c.sodium) as sodium,
+        avg(c.potassium) as potassium,
+        avg(c.magnesium) as magnesium
+    FROM cohort_hours as ch
+    INNER JOIN mimiciv_derived.chemistry as c
+        ON ch.hadm_id = c.hadm_id
+        AND c.charttime > ch.hour_end - INTERVAL '1' HOUR
+        AND c.charttime < ch.hour_end
     GROUP BY ch.stay_id, ch.hr
 )
 SELECT
@@ -72,6 +97,7 @@ SELECT
     vh.temperature,
     vh.spo2,
     vh.glucose_vital
+    --ADD THE CHEMISTRY FIELDS HERE.
 FROM cohort_hours as ch
 LEFT JOIN vitalsigns_hourly as vh
     ON ch.stay_id = vh.stay_id

@@ -91,15 +91,20 @@ WHERE LOWER(label) LIKE '%rdw%';
 --look at view for vital signs
 EXPLAIN(ANALYZE)
 select * from msc_project.vitalsign LIMIT 20;
+select count(*) as vitalsigncount
+from msc_project.vitalsign;   -- 13,519,533
 
 --look at view for lab events
 select * from msc_project.chemistry LIMIT 20;
+select count(*) from msc_project.chemistry;   -- 4,985,065
 
 --look at view for complete blood count
 select * from msc_project.complete_blood_count LIMIT 20;
+select count(*) from msc_project.complete_blood_count;   --	4,377,900
 
 --look at view for gcs
 select * from msc_project.gcs LIMIT 20;
+select count(*) from msc_project.gcs;  -- 2,217,787
 
 --look at view for vasoactive agents
 select * from msc_project.vasoactive_agent LIMIT 20;

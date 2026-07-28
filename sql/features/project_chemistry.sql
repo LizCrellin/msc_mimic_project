@@ -9,6 +9,7 @@
 --
 -- Modifications compared to original file:
 -- - Added magnesium (itemid code 50960)
+-- - Added an index to the table
 --
 -- TO DO:
 -- - Add physiological plausibile limit for magnesium 
@@ -63,4 +64,4 @@ WHERE
 GROUP BY
   le.specimen_id;
 CREATE INDEX ix_chemistry_hadm_charttime
-    ON mimiciv_derived.chemistry(stay_id, charttime);
+    ON mimiciv_derived.chemistry(hadm_id, charttime);

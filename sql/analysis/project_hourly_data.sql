@@ -13,8 +13,6 @@
 -- the same stay.
 --
 -- TO DO:
--- Addition of GCS (also from ICU stay and linked on stay id), and
--- lab data and bloods (from hosp table and linked on hadm id).
 -- Later: consider adding intervention events.
 --
 -- -----------------------------------------------------------------------------
@@ -95,6 +93,28 @@ gcs_hourly AS
         AND g.charttime > ch.hour_end - INTERVAL '1' HOUR
         AND g.charttime < ch.hour_end
     GROUP BY ch.stay_id, ch.hr
+),
+blood_hourly AS 
+(
+    SELECT
+        ch.stay_id,
+        ch.hr,
+        avg(hematocrit) as hematocrit,
+        avg(hemoglobin) as hemoglobin,
+        avg(mch) as mch,
+        avg(mchc) as mchc,
+        avg(mcv) as mcv,
+        avg(platelet) as platelet,
+        avg(rbc) as rbc,
+        avg(rdw) as rdw,
+        avg(rdwsd) as rdwsd,
+        avg(wbc) as wbc
+    FROM cohort_hours as ch
+    INNER JOIN mimiciv_derived.complete_blood_count as b
+        ON ch.hadm_id = b.hadm_id
+        AND b.charttime > ch.hour_end - INTERVAL '1' HOUR
+        AND b.charttime < ch.hour_end
+    GROUP BY ch.stay_id, ch.hr
 )
 SELECT
     ch.stay_id,
@@ -123,7 +143,17 @@ SELECT
     chh.sodium,
     chh.potassium,
     chh.magnesium,
-    gh.gcs
+    gh.gcs,
+    bh.hematocrit,
+    bh.hemoglobin,
+    bh.mch,
+    bh.mchc,
+    bh.mcv,
+    bh.platelet,
+    bh.rbc,
+    bh.rdw,
+    bh.rdwsd,
+    bh.wbc
 FROM cohort_hours as ch
 LEFT JOIN vitalsigns_hourly as vh
     ON ch.stay_id = vh.stay_id
@@ -133,4 +163,7 @@ LEFT JOIN chemistry_hourly as chh
     AND ch.hr = chh.hr
 LEFT JOIN gcs_hourly as gh
     ON ch.stay_id = gh.stay_id
-    AND ch.hr = gh.hr;
+    AND ch.hr = gh.hr
+LEFT JOIN blood_hourly as bh
+    ON ch.stay_id = bh.stay_id
+    AND ch.hr = bh.hr;

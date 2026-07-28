@@ -7,7 +7,10 @@
 --
 -- Accessed and adapted: 17 July 2026
 --
--- Modifications:
+-- Modifications compared to original:
+-- - added index
+--
+-- Changes:
 -- - 2026-07-26 dropped temperature site (commented out) as not required
 --
 -- TO DO:

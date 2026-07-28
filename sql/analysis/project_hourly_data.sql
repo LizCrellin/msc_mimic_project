@@ -82,6 +82,19 @@ chemistry_hourly AS
         AND c.charttime > ch.hour_end - INTERVAL '1' HOUR
         AND c.charttime < ch.hour_end
     GROUP BY ch.stay_id, ch.hr
+),
+gcs_hourly AS
+(
+    SELECT
+        ch.stay_id,
+        ch.hr,
+        avg(g.gcs) as gcs
+    FROM cohort_hours as ch
+    INNER JOIN mimiciv_derived.gcs AS g
+        ON ch.stay_id = g.stay_id
+        AND g.charttime > ch.hour_end - INTERVAL '1' HOUR
+        AND g.charttime < ch.hour_end
+    GROUP BY ch.stay_id, ch.hr
 )
 SELECT
     ch.stay_id,
@@ -96,9 +109,28 @@ SELECT
     vh.mbp_ni,
     vh.temperature,
     vh.spo2,
-    vh.glucose_vital
-    --ADD THE CHEMISTRY FIELDS HERE.
+    vh.glucose_vital,
+    chh.albumin,
+    chh.globulin,
+    chh.total_protein,
+    chh.aniongap,
+    chh.bicarbonate,
+    chh.bun,
+    chh.calcium,
+    chh.chloride,
+    chh.creatinine,
+    chh.glucose,
+    chh.sodium,
+    chh.potassium,
+    chh.magnesium,
+    gh.gcs
 FROM cohort_hours as ch
 LEFT JOIN vitalsigns_hourly as vh
     ON ch.stay_id = vh.stay_id
-    AND ch.hr = vh.hr;
+    AND ch.hr = vh.hr
+LEFT JOIN chemistry_hourly as chh
+    ON ch.stay_id = chh.stay_id
+    AND ch.hr = chh.hr
+LEFT JOIN gcs_hourly as gh
+    ON ch.stay_id = gh.stay_id
+    AND ch.hr = gh.hr;

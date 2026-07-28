@@ -8,15 +8,17 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Creation of views rather than tables
+-- - Addition of index
 --
 -- TO DO:
 -- 
 -- -----------------------------------------------------------------------------
 
 
-DROP VIEW IF EXISTS msc_project.complete_blood_count;
-CREATE VIEW msc_project.complete_blood_count AS
+--DROP VIEW IF EXISTS msc_project.complete_blood_count;
+--CREATE VIEW msc_project.complete_blood_count AS
+DROP TABLE IF EXISTS mimiciv_derived.complete_blood_count; CREATE TABLE mimiciv_derived.complete_blood_count AS
+
 /* begin query that extracts the data */
 SELECT
   MAX(subject_id) AS subject_id,
@@ -50,4 +52,6 @@ WHERE
   AND NOT valuenum IS NULL
   AND /* lab values cannot be 0 and cannot be negative */ valuenum > 0
 GROUP BY
-  le.specimen_id
+  le.specimen_id;
+CREATE INDEX ix_blood_hadm_charttime
+    ON mimiciv_derived.complete_blood_count(hadm_id, charttime);

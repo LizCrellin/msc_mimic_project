@@ -28,14 +28,14 @@ CREATE VIEW msc_project.hourly_data AS
 with cohort_hours AS
 (
     SELECT
-        p.stay_id as icustay_id,
+        p.icustay_id,
         p.subject_id,
         p.hadm_id,
         h.hours_in,
         h.hour_end
     FROM msc_project.icustay_hourly AS h
     INNER JOIN msc_project.allpatients AS p
-        ON h.stay_id = p.stay_id
+        ON h.icustay_id = p.icustay_id
 ),
 vitalsigns_hourly AS
 (
@@ -55,10 +55,10 @@ vitalsigns_hourly AS
         AVG(v.glucose) AS glucose_vital
     FROM cohort_hours as ch
     INNER JOIN mimiciv_derived.vitalsign AS v
-        ON v.stay_id = ch.stay_id
+        ON v.stay_id = ch.icustay_id
         AND v.charttime > ch.hour_end - INTERVAL '1' HOUR
-        AND v.charttime < ch.hour_end
-    GROUP BY ch.stay_id, ch.hours_in
+        AND v.charttime <= ch.hour_end
+    GROUP BY ch.icustay_id, ch.hours_in
 ),
 chemistry_hourly AS
 (
@@ -82,8 +82,8 @@ chemistry_hourly AS
     INNER JOIN mimiciv_derived.chemistry as c
         ON ch.hadm_id = c.hadm_id
         AND c.charttime > ch.hour_end - INTERVAL '1' HOUR
-        AND c.charttime < ch.hour_end
-    GROUP BY ch.stay_id, ch.hours_in
+        AND c.charttime <= ch.hour_end
+    GROUP BY ch.icustay_id, ch.hours_in
 ),
 gcs_hourly AS
 (
@@ -93,10 +93,10 @@ gcs_hourly AS
         avg(g.gcs) as gcs
     FROM cohort_hours as ch
     INNER JOIN mimiciv_derived.gcs AS g
-        ON ch.stay_id = g.stay_id
+        ON ch.icustay_id = g.stay_id
         AND g.charttime > ch.hour_end - INTERVAL '1' HOUR
-        AND g.charttime < ch.hour_end
-    GROUP BY ch.stay_id, ch.hours_in
+        AND g.charttime <= ch.hour_end
+    GROUP BY ch.icustay_id, ch.hours_in
 ),
 blood_hourly AS 
 (
@@ -111,14 +111,14 @@ blood_hourly AS
         avg(platelet) as platelet,
         avg(rbc) as rbc,
         avg(rdw) as rdw,
-        avg(rdwsd) as rdwsd,
+        --avg(rdwsd) as rdwsd,
         avg(wbc) as wbc
     FROM cohort_hours as ch
     INNER JOIN mimiciv_derived.complete_blood_count as b
         ON ch.hadm_id = b.hadm_id
         AND b.charttime > ch.hour_end - INTERVAL '1' HOUR
-        AND b.charttime < ch.hour_end
-    GROUP BY ch.stay_id, ch.hours_in
+        AND b.charttime <= ch.hour_end
+    GROUP BY ch.icustay_id, ch.hours_in
 )
 SELECT
     ch.subject_id,
@@ -158,7 +158,7 @@ SELECT
     bh.platelet,
     bh.rbc,
     bh.rdw,
-    bh.rdwsd,
+    --bh.rdwsd,
     bh.wbc
 FROM cohort_hours as ch
 LEFT JOIN vitalsigns_hourly as vh

@@ -24,7 +24,7 @@ CREATE VIEW msc_project.icustay_hourly AS
 /* This query generates a row for every hour the patient is in the ICU. */ /* The hour clock no longer starts 24 hours before the first heart rate measurement, rather starting at time of formal admission to ICU. */ /* this query extracts the cohort and every possible hour they were in the ICU */
 WITH all_hours AS (
   SELECT
-    ie.stay_id, /* round the intime up to the nearest hour */
+    ie.stay_id as icustay_id, /* round the intime up to the nearest hour */
     ie.intime,
     CASE
       WHEN DATE_TRUNC('hour', ie.intime) = ie.intime   -- replaced time based on heart rate measurement with icu_intime, official start of icu stay.
@@ -35,11 +35,11 @@ WITH all_hours AS (
   WHERE CEIL(EXTRACT(EPOCH FROM (ie.outtime - ie.intime)) / 3600) >= 24  -- The ICU stay must be for at least 24 hours.
   )
 SELECT
-    a.stay_id,
+    a.icustay_id,
     a.intime,                                                            -- retain intime for checks
-    hr,                                                                  -- hr is generated as a series at the end
+    hours_in,                                                              -- hours_in is generated as a series at the end
     a.endtime + hr * INTERVAL '1 hour' AS hour_end
 FROM all_hours a
 CROSS JOIN LATERAL
-generate_series(-24, 24) AS hr                                           -- hr is changed to a simple series
-ORDER BY stay_id, hr;
+generate_series(-24, 24) AS hours_in                                        -- hours_in is now coming from a simple series
+ORDER BY icustay_id, hours_in;

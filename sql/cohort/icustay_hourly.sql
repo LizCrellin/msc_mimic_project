@@ -38,7 +38,7 @@ SELECT
     a.icustay_id,
     a.intime,                                                            -- retain intime for checks
     hours_in,                                                              -- hours_in is generated as a series at the end
-    a.endtime + hr * INTERVAL '1 hour' AS hour_end
+    a.endtime + hours_in * INTERVAL '1 hour' AS hour_end
 FROM all_hours a
 CROSS JOIN LATERAL
 generate_series(-24, 24) AS hours_in                                        -- hours_in is now coming from a simple series

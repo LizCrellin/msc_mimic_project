@@ -22,7 +22,7 @@
 --
 -- -----------------------------------------------------------------------------
 
-DROP VIEW IF EXISTS msc_project.allpatients;
+DROP VIEW IF EXISTS msc_project.allpatients CASCADE;
 
 CREATE VIEW msc_project.allpatients AS
 
@@ -31,7 +31,7 @@ WITH allpatients AS
 SELECT
   ie.subject_id,
   ie.hadm_id,
-  ie.stay_id, /* patient level factors */
+  ie.stay_id as icustay_id, /* patient level factors */
   pat.gender,
   pat.dod, /* hospital level factors */
   adm.admittime,
@@ -69,7 +69,7 @@ INNER JOIN mimiciv_hosp.patients AS pat
 SELECT
   subject_id,
   hadm_id,
-  stay_id,
+  icustay_id,
   gender,
   dod,
   admittime,

@@ -16,10 +16,10 @@ SELECT setseed(0.33);
 DROP TABLE IF EXISTS msc_project.sample_stays;
 CREATE TABLE msc_project.sample_stays AS
 SELECT
-  stay_id,
+  icustay_id,
   hadm_id,
   subject_id
-FROM mimiciv_icu.icustays
+FROM msc_project.allpatients
 ORDER BY RANDOM()
 LIMIT 50;
 
@@ -30,21 +30,21 @@ CREATE TABLE msc_project.sample_icustays AS
 SELECT icu.*
 FROM mimiciv_icu.icustays AS icu
 INNER JOIN msc_project.sample_stays AS s
-  ON icu.stay_id = s.stay_id;
+  ON icu.stay_id = s.icustay_id;
 
 DROP TABLE IF EXISTS msc_project.sample_chartevents;
 CREATE TABLE msc_project.sample_chartevents AS
 SELECT ce.*
 FROM mimiciv_icu.chartevents AS ce
 INNER JOIN msc_project.sample_stays AS s
-  ON ce.stay_id = s.stay_id;
+  ON ce.stay_id = s.icustay_id;
 
 DROP TABLE IF EXISTS msc_project.sample_inputevents;
 CREATE TABLE msc_project.sample_inputevents AS
 SELECT ie.*
 FROM mimiciv_icu.inputevents AS ie
 INNER JOIN msc_project.sample_stays AS s
-  ON ie.stay_id = s.stay_id;
+  ON ie.stay_id = s.icustay_id;
 
 -- hosp schema (no stay_id, so join via hadm_id / subject_id)
 
@@ -79,11 +79,11 @@ CREATE TABLE msc_project.sample_hourly_data AS
 SELECT hd.*
 FROM msc_project.hourly_data AS hd
 INNER JOIN msc_project.sample_stays AS s
-  ON hd.icustay_id = s.stay_id;
+  ON hd.icustay_id = s.icustay_id;
 
 DROP TABLE IF EXISTS msc_project.sample_allpatients;
 CREATE TABLE msc_project.sample_allpatients AS
 SELECT p.*
 FROM msc_project.allpatients AS p
 INNER JOIN msc_project.sample_stays AS s
-  ON p.icustay_id = s.stay_id;
+  ON p.icustay_id = s.icustay_id;

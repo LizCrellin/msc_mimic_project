@@ -82,5 +82,6 @@ SELECT
   los_icu
 FROM allpatients
 WHERE first_icu_stay = TRUE
+AND first_hosp_stay = TRUE
 AND los_icu >= 1
 AND admission_age >= 18;

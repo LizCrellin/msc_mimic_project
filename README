@@ -10,8 +10,9 @@
 - VS Code
 - Git 
 - Git Bash
-- PostgreSQL extension for VS Code by Chris Kolkman
+- PostgreSQL Management Tool extension for VS Code by Chris Kolkman
 - Python (see requirements.txt)
+- Data Wrangler (Microsoft)
 
 
 ## Setup

@@ -18,6 +18,9 @@ data/
 *.csv
 *.csv.gz
 
+# Results
+results/
+
 # PostgreSQL exports
 *.sql.bak
 *.dump

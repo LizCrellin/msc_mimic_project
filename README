@@ -87,6 +87,11 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Features | sql/features/project_vasopressin.sql | inputevents table | derived vasopressin table | extracts start and end times for this drug |
 | Features | sql/features/project_vasoactive_agent.sql | derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | 
 | Analysis | sql/analysis/project_hourly_data.sql | icustay_hourly, allpatients, all derived features tables | derived hourly_data view | Restricting to the eligible cohort defined in allpatients, joins vital signs to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged |
+| Functions | python/setup/setup_fun.py | NA | NA | All setup functions in python |
 |  |  |  |  |  | 
 
-Functions: python/setup/setup_fun.py
+## NOTEBOOKS
+| Name | Purpose | 
+| ---- | ----- |
+| 1_Understand_Wang_pipeline.ipynb | Explore machine learning pipeline to understand approach and relevant adaptations for this project |
+||

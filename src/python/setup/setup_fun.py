@@ -12,7 +12,8 @@ import pandas as pd
 
 def filter_itemids(input_file, itemid_file, output_file, column_list):
     '''
-    Filter the input file based on selected itemids and save to output file.
+    Filter the input file based on selected itemids and columns required for later 
+    processing, and save to output file.
     '''
     # Store the item id list into a set
     itemids = set(pd.read_csv(itemid_file, usecols=[0], header = 0)["itemid"].astype(int))

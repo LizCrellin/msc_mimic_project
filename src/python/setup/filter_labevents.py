@@ -2,6 +2,10 @@
 # File: python/setup/filter_labevents.py
 # Created: 18 July 2026
 #
+# Purpose: This script filters the labevents table to only the itemids that I need
+# for concepts that will be derived, in order to minimise storage needed for the database.
+# Additionally limits to relevant columns only.
+#
 # Modifications:
 # Amended to use setup_fun.py to filter labevents based on itemid list
 #

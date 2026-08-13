@@ -13,7 +13,7 @@
 -- - Dropped duration, keeping only start and end times
 --
 -- TO DO:
--- 
+--  Develop to generate on and off times for mechanical ventilation
 --
 -- -----------------------------------------------------------------------------
 

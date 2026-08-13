@@ -9,6 +9,7 @@
 --
 -- Modifications:
 -- - Addition of index
+-- - Removal of rdwsd (platelet aggregation) as not in my concepts list.
 --
 -- TO DO:
 -- 

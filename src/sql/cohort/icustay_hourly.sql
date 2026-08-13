@@ -7,11 +7,11 @@
 --
 -- Accessed: 25 July 2026
 --
--- Modifications:
+-- Modifications compared to original file:
 -- - Creation of view rather than table
 -- - Start time is not 24 hours before first heart rate measurement but 24 hours before actual admission to ICU
 -- - Only retain ICU stays of at least 24 hours
--- - Simplification of the generation of a time series from -24 h to +24 hours from admission to the ICU
+-- - Simplification of the generation of a time series from -24 h to +24 hours before and after admission to the ICU
 --
 -- TO DO:
 -- 
@@ -21,7 +21,7 @@
 DROP VIEW IF EXISTS msc_project.icustay_hourly;
 
 CREATE VIEW msc_project.icustay_hourly AS
-/* This query generates a row for every hour the patient is in the ICU. */ /* The hour clock no longer starts 24 hours before the first heart rate measurement, rather starting at time of formal admission to ICU. */ /* this query extracts the cohort and every possible hour they were in the ICU */
+/* This query generates a row for every hour the patient is in the ICU. */ /* The hour clock no longer starts 24 hours before the first heart rate measurement, rather starting at time of formal admission to ICU. */ /* this query extracts the cohort and every possible hour they were in the ICU up to 24 hours max*/
 WITH all_hours AS (
   SELECT
     ie.stay_id as icustay_id, /* round the intime up to the nearest hour */
@@ -36,7 +36,7 @@ WITH all_hours AS (
   )
 SELECT
     a.icustay_id,
-    a.intime,                                                            -- retain intime for checks
+    a.intime,                                                            -- retain intime to allow for checks
     hours_in,                                                              -- hours_in is generated as a series at the end
     a.endtime + hours_in * INTERVAL '1 hour' AS hour_end
 FROM all_hours a

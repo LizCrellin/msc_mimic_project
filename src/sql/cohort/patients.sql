@@ -7,7 +7,7 @@
 --
 -- Accessed: 13 July 2026
 --
--- Modifications:
+-- Modifications compared to the original file:
 -- - Creation of view rather than tables
 -- - Limits the output to ICU stays that meet inclusion criteria for the project:
 -- - - First ICU stay for each patient
@@ -15,7 +15,6 @@
 -- - - Patient age at admission >= 18
 -- - - Added admission type and admission location
 -- - Does not retain flags for first hospital or ICU stay_id or stay sequence
--- - Does not retain 
 --
 -- TO DO:
 -- - could add checks e.g. that icu intime is after hosp admission 

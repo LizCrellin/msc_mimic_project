@@ -48,6 +48,10 @@ overall using:<br>
 
 ## Usage guidelines
 
+## To do (code)
+- Create one import script which calls each of the individual imports
+
+
 ## DATASETS
 NB MIMIC IV data are not stored in this repository.<br>
 Description here of the MIMIC IV dataset and how it has been accessed, access limitations etc.<br>
@@ -60,6 +64,7 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Setup | `sql/setup/01_create_mimic_schemas.sql` | NA | NA | Sets up ready to load data |
 | Setup | `sql/setup/02_create_project_schemas.sql` | NA | NA | Sets up ready to load data |
 | Setup | `sql/setup/03_create_indexes.sql` | NA | NA | Indexing the larger tables for faster processing | 
+| Setup | `sql/setup/04_create_sample_ds.sql` | NA | NA | Creates a test version of the database tables based on a random sample of 50 ICU stays | 
 | Setup | `python/setup/filter_chartevents.py` | Raw chartevents table | Filtered version of raw chartevents table | Filters the chartevents table to only required codes and columns |
 | Setup | `python/setup/filter_labevents.py` | Raw labevents table | Filtered version of raw labevents table | Filters the labevents table to only required codes and columns |
 | Setup | `sql/setup/import/load_admissions.sql` | Raw admissions table | Populated table in database | Loads admissions into the database |

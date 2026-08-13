@@ -68,9 +68,9 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Setup | `sql/setup/import/load_d_labitems.sql` | Raw d_labitems table | Populated table in database | Loads d_labitems into the database |
 | Setup | `sql/setup/import/load_icustays.sql` | Raw icustays table | Populated table in database | Loads icustays into the database |
 | Setup | `sql/setup/import/load_inputevents.sql` | Raw inputevents table | Populated table in database | Loads inputevents into the database |
-| Setup | vsql/setup/import/load_labevents.sql` | Filtered labevents table | Populated table in database | Loads labevents into the database |
+| Setup | `sql/setup/import/load_labevents.sql` | Filtered labevents table | Populated table in database | Loads labevents into the database |
 | Setup | `sql/setup/import/load_patients.sql` | Raw patients table | Populated table in database | Loads patients into the database |
-| Cohort | `sql/cohort/patients.sql` | icustays table, patients table, admissions table | derived allpatients view with all ICU stays and detials about patient, hospital admission and ICU stay | Extracts relevant details for the eligible ICU stays | 
+| Cohort | `sql/cohort/patients.sql` | icustays table, patients table, admissions table | derived allpatients view with all ICU stays and details about patient, hospital admission and ICU stay | Extracts relevant details for the eligible ICU stays | 
 | Cohort | `sql/cohort/icustay_hourly.sql` | icustays table | derived icustay_hourly view with a row per ICU stay per hour | generates hourly spine |
 | Features | `sql/features/project_chemistry.sql` | labevents table | derived chemistry table | extracts relevant concepts for chemistry, setting physiologically implausible values as null |
 | Features | `sql/features/project_complete_blood_count.sql` | labevents table | derived complete_blood_count table | extracts relevant concepts for blood counts, setting physiologically implausible values as null | 
@@ -85,7 +85,7 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Features | `sql/features/project_norepinephrine.sql` | inputevents table | derived norepinephrine table | extracts start and end times for this drug |
 | Features | `sql/features/project_phenylephrine.sql` | inputevents table | derived phenylephrine table | extracts start and end times for this drug |
 | Features | `sql/features/project_vasopressin.sql` | inputevents table | derived vasopressin table | extracts start and end times for this drug |
-| Features | `sql/features/project_vasoactive_agent.sql`| derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | 
+| Features | `sql/features/project_vasoactive_agent.sql` | derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | 
 | Analysis | `sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_data view | Restricting to the eligible cohort defined in allpatients, joins vital signs to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged |
 | Functions | `python/setup/setup_fun.py` | NA | NA | All setup functions in python |
 

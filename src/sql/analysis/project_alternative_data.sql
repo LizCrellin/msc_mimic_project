@@ -107,7 +107,11 @@ vitalsigns_agg AS
         COUNT(v.resp_rate) AS resp_rate_count,
         COUNT(v.temperature) AS temperature_count,
         COUNT(v.spo2) AS spo2_count,
-        COUNTP(v.glucose) AS glucose_vital_count
+        COUNT(v.glucose) AS glucose_vital_count
+        --First value
+        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime ASC))[1] AS heart_rate_first,
+        --Last value
+        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC))[1] AS heart_rate_first,
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = p.icustay_id

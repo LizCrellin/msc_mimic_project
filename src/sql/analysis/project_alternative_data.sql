@@ -205,5 +205,5 @@ SELECT
     EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) / 3600 AS value_last_time,
     REGR_SLOPE(value, (EXTRACT(EPOCH FROM charttime) / 3600) ) AS value_slope
 FROM vitalsign
-GROUP BY icustay_id, icu_intime, variable_name
+GROUP BY subject_id, hadm_id, icustay_id, icu_intime, variable_name
 ORDER BY icustay_id, variable_name;

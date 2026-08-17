@@ -115,7 +115,7 @@ vitalsigns_agg AS
         --Time of first value
         (ARRAY_AGG(v.charttime ORDER BY v.charttime ASC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_first_time,
         --Time of last value
-        (ARRAY_AGG(v.charttime ORDER BY v.charttime DESC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_last_time,
+        (ARRAY_AGG(v.charttime ORDER BY v.charttime DESC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_last_time
 
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
@@ -185,7 +185,11 @@ SELECT
     va.resp_rate_count,
     va.temperature_count,
     va.spo2_count,
-    va.glucose_vital_count
+    va.glucose_vital_count,
+    heart_rate_first,
+    heart_rate_last,
+    heart_rate_first_time,
+    heart_rate_last_time
 FROM patients as p
 LEFT JOIN vitalsigns_agg as va
-    ON p.icustay_id = va.icustay_id
+    ON p.icustay_id = va.icustay_id;

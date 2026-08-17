@@ -78,6 +78,8 @@ SELECT
   admission_age,
   race,
   hospital_expire_flag,
+  icu_intime,             
+  icu_outtime,
   los_icu
 FROM allpatients
 WHERE first_icu_stay = TRUE

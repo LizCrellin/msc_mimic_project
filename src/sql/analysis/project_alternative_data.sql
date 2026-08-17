@@ -113,9 +113,11 @@ vitalsigns_agg AS
         --Last value
         (ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last,
         --Time of first value
-        (ARRAY_AGG(v.charttime ORDER BY v.charttime ASC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_first_time,
+        EXTRACT(EPOCH FROM (MIN(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) AS heart_rate_first_time,
+        --(ARRAY_AGG(v.charttime ORDER BY v.charttime ASC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_first_time,
         --Time of last value
-        (ARRAY_AGG(v.charttime ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last_time
+        EXTRACT(EPOCH FROM (MAX(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) AS heart_rate_first_time
+        --(ARRAY_AGG(v.charttime ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last_time
 
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
@@ -123,7 +125,7 @@ vitalsigns_agg AS
     WHERE v.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
     AND v.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
     GROUP BY p.icustay_id
-),
+)
 --- more tables to be added
 SELECT
     p.subject_id,

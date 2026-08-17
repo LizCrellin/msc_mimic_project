@@ -134,8 +134,8 @@ chemistry AS (
     FROM patients as p
     INNER JOIN chemistry_long as cl
     ON p.icustay_id = cl.stay_id
-    WHERE cl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
-    AND cl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+    WHERE cl.charttime <= p.icu_intime + INTERVAL '24' HOUR
+    AND cl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 ), 
 gcs_long AS (
     SELECT stay_id, charttime, 'gcs' as variable_name, gcs as value
@@ -144,10 +144,10 @@ gcs_long AS (
 gcs AS (
     SELECT p.icustay_id, p.icu_intime, gl.variable_name, gl.value, gl.charttime
     FROM patients as p
-    INNER JOIN gcs as gl
+    INNER JOIN gcs_long as gl
     ON p.icustay_id = gl.stay_id
-    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
-    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR
+    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 ), 
 blood_long AS (
     SELECT stay_id, charttime, 'hematocrit' as variable_name, hematocrit as value
@@ -185,8 +185,8 @@ blood AS (
     FROM patients as p
     INNER JOIN blood_long as bl
     ON p.icustay_id = bl.stay_id
-    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
-    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR
+    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 )
 SELECT
     icustay_id
@@ -203,4 +203,5 @@ SELECT
     EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) AS value_last_time,
     REGR_SLOPE(value, EXTRACT(EPOCH FROM charttime)) AS value_slope
 FROM vitalsign
-GROUP BY icustay_id, icu_intime, variable_name;
+GROUP BY icustay_id, icu_intime, variable_name
+ORDER BY icustay_id, variable_name;

@@ -90,50 +90,50 @@ vitalsign AS (
     AND vl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
 ),
 chemistry_long AS (
-    SELECT stay_id, charttime, 'albumin' as variable_name, albumin as value
+    SELECT hadm_id, charttime, 'albumin' as variable_name, albumin as value
     from mimiciv_derived.chemistry where albumin is not null
     UNION ALL
-    SELECT stay_id, charttime, 'globulin' as variable_name, globulin as value
+    SELECT hadm_id, charttime, 'globulin' as variable_name, globulin as value
     from mimiciv_derived.chemistry where globulin is not null
     UNION ALL    
-    SELECT stay_id, charttime, 'total_protein' as variable_name, total_protein as value
+    SELECT hadm_id, charttime, 'total_protein' as variable_name, total_protein as value
     from mimiciv_derived.chemistry where total_protein is not null
     UNION ALL 
-    SELECT stay_id, charttime, 'aniongap' as variable_name, aniongap as value
+    SELECT hadm_id, charttime, 'aniongap' as variable_name, aniongap as value
     from mimiciv_derived.chemistry where aniongap is not null
     UNION ALL
-    SELECT stay_id, charttime, 'bicarbonate' as variable_name, bicarbonate as value
+    SELECT hadm_id, charttime, 'bicarbonate' as variable_name, bicarbonate as value
     from mimiciv_derived.chemistry where bicarbonate is not null
     UNION ALL
-    SELECT stay_id, charttime, 'bun' as variable_name, bun as value
+    SELECT hadm_id, charttime, 'bun' as variable_name, bun as value
     from mimiciv_derived.chemistry where bun is not null
     UNION ALL
-    SELECT stay_id, charttime, 'calcium' as variable_name, calcium as value
+    SELECT hadm_id, charttime, 'calcium' as variable_name, calcium as value
     from mimiciv_derived.chemistry where calcium is not null
     UNION ALL
-    SELECT stay_id, charttime, 'chloride' as variable_name, chloride as value
+    SELECT hadm_id, charttime, 'chloride' as variable_name, chloride as value
     from mimiciv_derived.chemistry where chloride is not null
     UNION ALL   
-    SELECT stay_id, charttime, 'creatinine' as variable_name, creatinine as value
+    SELECT hadm_id, charttime, 'creatinine' as variable_name, creatinine as value
     from mimiciv_derived.chemistry where creatinine is not null
     UNION ALL
-    SELECT stay_id, charttime, 'glucose_lab' as variable_name, glucose as value
+    SELECT hadm_id, charttime, 'glucose_lab' as variable_name, glucose as value
     from mimiciv_derived.chemistry where glucose is not null
     UNION ALL
-    SELECT stay_id, charttime, 'sodium' as variable_name, sodium as value
+    SELECT hadm_id, charttime, 'sodium' as variable_name, sodium as value
     from mimiciv_derived.chemistry where sodium is not null
     UNION ALL
-    SELECT stay_id, charttime, 'potassium' as variable_name, potassium as value
+    SELECT hadm_id, charttime, 'potassium' as variable_name, potassium as value
     from mimiciv_derived.chemistry where potassium is not null
     UNION ALL
-    SELECT stay_id, charttime, 'magnesium' as variable_name, magnesium as value
+    SELECT hadm_id, charttime, 'magnesium' as variable_name, magnesium as value
     from mimiciv_derived.chemistry where magnesium is not null
 ),
 chemistry AS (
     SELECT p.icustay_id, p.icu_intime, cl.variable_name, cl.value, cl.charttime
     FROM patients as p
     INNER JOIN chemistry_long as cl
-    ON p.icustay_id = cl.stay_id
+    ON p.hadm_id = cl.hadm_id
     WHERE cl.charttime <= p.icu_intime + INTERVAL '24' HOUR
     AND cl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 ), 
@@ -150,43 +150,43 @@ gcs AS (
     AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 ), 
 blood_long AS (
-    SELECT stay_id, charttime, 'hematocrit' as variable_name, hematocrit as value
+    SELECT hadm_id, charttime, 'hematocrit' as variable_name, hematocrit as value
     from mimiciv_derived.complete_blood_count where hematocrit is not null
     UNION ALL
-    SELECT stay_id, charttime, 'hemoglobin' as variable_name, hemoglobin as value
+    SELECT hadm_id, charttime, 'hemoglobin' as variable_name, hemoglobin as value
     from mimiciv_derived.complete_blood_count where hemoglobin is not null
     UNION ALL    
-    SELECT stay_id, charttime, 'mch' as variable_name, mch as value
+    SELECT hadm_id, charttime, 'mch' as variable_name, mch as value
     from mimiciv_derived.complete_blood_count where mch is not null
     UNION ALL
-    SELECT stay_id, charttime, 'mchc' as variable_name, mchc as value
+    SELECT hadm_id, charttime, 'mchc' as variable_name, mchc as value
     from mimiciv_derived.complete_blood_count where mchc is not null
     UNION ALL
-    SELECT stay_id, charttime, 'mcv' as variable_name, mcv as value
+    SELECT hadm_id, charttime, 'mcv' as variable_name, mcv as value
     from mimiciv_derived.complete_blood_count where mcv is not null
     UNION ALL
-    SELECT stay_id, charttime, 'platelet' as variable_name, platelet as value
+    SELECT hadm_id, charttime, 'platelet' as variable_name, platelet as value
     from mimiciv_derived.complete_blood_count where platelet is not null
     UNION ALL
-    SELECT stay_id, charttime, 'rbc' as variable_name, rbc as value
+    SELECT hadm_id, charttime, 'rbc' as variable_name, rbc as value
     from mimiciv_derived.complete_blood_count where rbc is not null
     UNION ALL
-    SELECT stay_id, charttime, 'rdw' as variable_name, rdw as value
+    SELECT hadm_id, charttime, 'rdw' as variable_name, rdw as value
     from mimiciv_derived.complete_blood_count where rdw is not null
     UNION ALL
-    SELECT stay_id, charttime, 'wbc' as variable_name, wbc as value
+    SELECT hadm_id, charttime, 'wbc' as variable_name, wbc as value
     from mimiciv_derived.complete_blood_count where wbc is not null
     UNION ALL
-    SELECT stay_id, charttime, 'rbc' as variable_name, rbc as value
+    SELECT hadm_id, charttime, 'rbc' as variable_name, rbc as value
     from mimiciv_derived.complete_blood_count where rbc is not null
 ),
 blood AS (
     SELECT p.icustay_id, p.icu_intime, bl.variable_name, bl.value, bl.charttime
     FROM patients as p
     INNER JOIN blood_long as bl
-    ON p.icustay_id = bl.stay_id
-    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR
-    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR
+    ON p.hadm_id = bl.hadm_id
+    WHERE bl.charttime <= p.icu_intime + INTERVAL '24' HOUR
+    AND bl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 )
 SELECT
     icustay_id

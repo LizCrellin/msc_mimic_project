@@ -44,156 +44,61 @@ with patients AS
     FROM msc_project.allpatients AS p
     WHERE p.icu_outtime - p.icu_intime >= INTERVAL '24' HOUR   -- stay must be at least 24 hours
 ),
-vitalsigns_agg AS
+vitalsigns_long AS
 (
-    SELECT
-        p.icustay_id,
-        -- Min:
-        MIN(v.heart_rate) AS heart_rate_min,
-        MIN(v.sbp) AS sbp_min,
-        MIN(v.dbp) AS dbp_min,
-        MIN(v.mbp) AS mbp_min,
-        MIN(v.sbp_ni) AS sbp_ni_min,
-        MIN(v.dbp_ni) AS dbp_ni_min,
-        MIN(v.mbp_ni) AS mbp_ni_min,
-        MIN(v.resp_rate) AS resp_rate_min,
-        MIN(v.temperature) AS temperature_min,
-        MIN(v.spo2) AS spo2_min,
-        MIN(v.glucose) AS glucose_vital_min,
-        -- Max:
-        MAX(v.heart_rate) AS heart_rate_max,
-        MAX(v.sbp) AS sbp_max,
-        MAX(v.dbp) AS dbp_max,
-        MAX(v.mbp) AS mbp_max,
-        MAX(v.sbp_ni) AS sbp_ni_max,
-        MAX(v.dbp_ni) AS dbp_ni_max,
-        MAX(v.mbp_ni) AS mbp_ni_max,
-        MAX(v.resp_rate) AS resp_rate_max,
-        MAX(v.temperature) AS temperature_max,
-        MAX(v.spo2) AS spo2_max,
-        MAX(v.glucose) AS glucose_vital_max,
-        -- Means:
-        AVG(v.heart_rate) AS heart_rate_avg,
-        AVG(v.sbp) AS sbp_avg,
-        AVG(v.dbp) AS dbp_avg,
-        AVG(v.mbp) AS mbp_avg,
-        AVG(v.sbp_ni) AS sbp_ni_avg,
-        AVG(v.dbp_ni) AS dbp_ni_avg,
-        AVG(v.mbp_ni) AS mbp_ni_avg,
-        AVG(v.resp_rate) AS resp_rate_avg,
-        AVG(v.temperature) AS temperature_avg,
-        AVG(v.spo2) AS spo2_avg,
-        AVG(v.glucose) AS glucose_vital_avg,
-        -- Std:
-        STDDEV_SAMP(v.heart_rate) AS heart_rate_std,
-        STDDEV_SAMP(v.sbp) AS sbp_std,
-        STDDEV_SAMP(v.dbp) AS dbp_std,
-        STDDEV_SAMP(v.mbp) AS mbp_std,
-        STDDEV_SAMP(v.sbp_ni) AS sbp_ni_std,
-        STDDEV_SAMP(v.dbp_ni) AS dbp_ni_std,
-        STDDEV_SAMP(v.mbp_ni) AS mbp_ni_std,
-        STDDEV_SAMP(v.resp_rate) AS resp_rate_std,
-        STDDEV_SAMP(v.temperature) AS temperature_std,
-        STDDEV_SAMP(v.spo2) AS spo2_std,
-        STDDEV_SAMP(v.glucose) AS glucose_vital_std,
-        --number of observations
-        COUNT(v.heart_rate) AS heart_rate_count,
-        COUNT(v.sbp) AS sbp_count,
-        COUNT(v.dbp) AS dbp_count,
-        COUNT(v.mbp) AS mbp_count,
-        COUNT(v.sbp_ni) AS sbp_ni_count,
-        COUNT(v.dbp_ni) AS dbp_ni_count,
-        COUNT(v.mbp_ni) AS mbp_ni_count,
-        COUNT(v.resp_rate) AS resp_rate_count,
-        COUNT(v.temperature) AS temperature_count,
-        COUNT(v.spo2) AS spo2_count,
-        COUNT(v.glucose) AS glucose_vital_count,
-        --First value
-        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime ASC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_first,
-        --Last value
-        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last,
-        --Time of first value
-        EXTRACT(EPOCH FROM (MIN(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) AS heart_rate_first_time,
-        --(ARRAY_AGG(v.charttime ORDER BY v.charttime ASC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_first_time,
-        --Time of last value
-        EXTRACT(EPOCH FROM (MAX(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) AS heart_rate_last_time,
-        --(ARRAY_AGG(v.charttime ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last_time
-        --Slope
-        REGR_SLOPE(v.heart_rate, EXTRACT(EPOCH FROM v.charttime)) AS heart_rate_slope
-
+    SELECT stay_id, charttime, 'heart_rate' as variable_name, heart_rate as value
+    from mimiciv_derived.vitalsign where heart_rate is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'sbp' as variable_name, sbp as value
+    from mimiciv_derived.vitalsign where sbp is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'dbp' as variable_name, dbp as value
+    from mimiciv_derived.vitalsign where dbp is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'mbp' as variable_name, mbp as value
+    from mimiciv_derived.vitalsign where mbp is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'sbp_ni' as variable_name, sbp_ni as value
+    from mimiciv_derived.vitalsign where sbp_ni is not null
+    UNION ALL       
+    SELECT stay_id, charttime, 'dbp_ni' as variable_name, dbp_ni as value
+    from mimiciv_derived.vitalsign where dbp_ni is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'mbp_ni' as variable_name, mbp_ni as value
+    from mimiciv_derived.vitalsign where mbp_ni is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'resp_rate' as variable_name, resp_rate as value
+    from mimiciv_derived.vitalsign where resp_rate is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'temperature' as variable_name, temperature as value
+    from mimiciv_derived.vitalsign where temperature is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'spo2' as variable_name, spo2 as value
+    from mimiciv_derived.vitalsign where spo2 is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'glucose_vital' as variable_name, glucose as value
+    from mimiciv_derived.vitalsign where glucose is not null
+),
+vitalsign AS (
+    SELECT p.icustay_id, p.icu_intime, vl.variable_name, vl.value, vl.charttime
     FROM patients as p
-    INNER JOIN mimiciv_derived.vitalsign AS v
-        ON v.stay_id = p.icustay_id
+    INNER JOIN vitalsign_long as vl
+    ON p.icustay_id = vl.stay_id
     WHERE v.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
     AND v.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
-    GROUP BY p.icustay_id, p.icu_intime
 )
---- more tables to be added
+-- will be adding and appending the other tables here.
 SELECT
-    p.subject_id,
-    p.hadm_id,
-    p.icustay_id,
-    p.icu_intime,
-    va.heart_rate_min,
-    va.sbp_min,
-    va.dbp_min,
-    va.mbp_min,
-    va.sbp_ni_min,
-    va.dbp_ni_min,
-    va.mbp_ni_min,
-    va.resp_rate_min,
-    va.temperature_min,
-    va.spo2_min,
-    va.glucose_vital_min,
-    va.heart_rate_max,
-    va.sbp_max,
-    va.dbp_max,
-    va.mbp_max,
-    va.sbp_ni_max,
-    va.dbp_ni_max,
-    va.mbp_ni_max,
-    va.resp_rate_max,
-    va.temperature_max,
-    va.spo2_max,
-    va.glucose_vital_max,
-    va.heart_rate_avg,
-    va.sbp_avg,
-    va.dbp_avg,
-    va.mbp_avg,
-    va.sbp_ni_avg,
-    va.dbp_ni_avg,
-    va.mbp_ni_avg,
-    va.resp_rate_avg,
-    va.temperature_avg,
-    va.spo2_avg,
-    va.glucose_vital_avg,
-    va.heart_rate_std,
-    va.sbp_std,
-    va.dbp_std,
-    va.mbp_std,
-    va.sbp_ni_std,
-    va.dbp_ni_std,
-    va.mbp_ni_std,
-    va.resp_rate_std,
-    va.temperature_std,
-    va.spo2_std,
-    va.glucose_vital_std,
-    va.heart_rate_count,
-    va.sbp_count,
-    va.dbp_count,
-    va.mbp_count,
-    va.sbp_ni_count,
-    va.dbp_ni_count,
-    va.mbp_ni_count,
-    va.resp_rate_count,
-    va.temperature_count,
-    va.spo2_count,
-    va.glucose_vital_count,
-    va.heart_rate_first,
-    va.heart_rate_last,
-    va.heart_rate_first_time,
-    va.heart_rate_last_time,
-    va.heart_rate_slope
-FROM patients as p
-LEFT JOIN vitalsigns_agg as va
-    ON p.icustay_id = va.icustay_id;
+    icustay_id
+    icu_intime,
+    variable_name,
+    MIN(value) as value_min,
+    MAX(value) as value_max,
+    AVG(value) as value_avg,
+    STDDEV_SAMP(value) as value_std,
+    COUNT(value) as value_count,
+    (ARRAY_AGG(value ORDER BY charttime ASC)) [1] AS value_first
+    (ARRAY_AGG(value ORDER BY charttime DESC)) [1] AS value_last
+    EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) AS value_first_time
+    EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) AS value_last_time
+    REGR_SLOPE(value, EXTRACT(EPOCH FROM charttime)) AS value_slope

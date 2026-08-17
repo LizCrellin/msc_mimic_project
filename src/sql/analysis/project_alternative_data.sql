@@ -44,7 +44,7 @@ with patients AS
     FROM msc_project.allpatients AS p
     WHERE p.icu_outtime - p.icu_intime >= INTERVAL '24' HOUR   -- stay must be at least 24 hours
 ),
-vitalsigns_long AS
+vitalsign_long AS
 (
     SELECT stay_id, charttime, 'heart_rate' as variable_name, heart_rate as value
     from mimiciv_derived.vitalsign where heart_rate is not null
@@ -84,8 +84,8 @@ vitalsign AS (
     FROM patients as p
     INNER JOIN vitalsign_long as vl
     ON p.icustay_id = vl.stay_id
-    WHERE v.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
-    AND v.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+    WHERE vl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+    AND vl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
 )
 -- will be adding and appending the other tables here.
 SELECT
@@ -97,8 +97,10 @@ SELECT
     AVG(value) as value_avg,
     STDDEV_SAMP(value) as value_std,
     COUNT(value) as value_count,
-    (ARRAY_AGG(value ORDER BY charttime ASC)) [1] AS value_first
-    (ARRAY_AGG(value ORDER BY charttime DESC)) [1] AS value_last
-    EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) AS value_first_time
-    EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) AS value_last_time
+    (ARRAY_AGG(value ORDER BY charttime ASC)) [1] AS value_first,
+    (ARRAY_AGG(value ORDER BY charttime DESC)) [1] AS value_last,
+    EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) AS value_first_time,
+    EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) AS value_last_time,
     REGR_SLOPE(value, EXTRACT(EPOCH FROM charttime)) AS value_slope
+FROM vitalsign
+GROUP BY icustay_id, icu_intime, variable_name;

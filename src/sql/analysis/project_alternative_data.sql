@@ -117,9 +117,9 @@ chemistry_long AS (
     SELECT hadm_id, charttime, 'creatinine' as variable_name, creatinine as value
     from mimiciv_derived.chemistry where creatinine is not null
     UNION ALL
-    SELECT hadm_id, charttime, 'glucose_lab' as variable_name, glucose as value
-    from mimiciv_derived.chemistry where glucose is not null
-    UNION ALL
+    -- SELECT hadm_id, charttime, 'glucose_lab' as variable_name, glucose as value    # remove glucose as its in the vitals
+    -- from mimiciv_derived.chemistry where glucose is not null
+    -- UNION ALL
     SELECT hadm_id, charttime, 'sodium' as variable_name, sodium as value
     from mimiciv_derived.chemistry where sodium is not null
     UNION ALL

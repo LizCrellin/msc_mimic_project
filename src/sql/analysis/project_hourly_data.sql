@@ -74,7 +74,7 @@ chemistry_hourly AS
         avg(c.calcium) as calcium,
         avg(c.chloride) as chloride,
         avg(c.creatinine) as creatinine,
-        avg(c.glucose) as glucose,
+        --avg(c.glucose) as glucose,   # remove glucose as its included in vitals
         avg(c.sodium) as sodium,
         avg(c.potassium) as potassium,
         avg(c.magnesium) as magnesium
@@ -145,7 +145,7 @@ SELECT
     chh.calcium,
     chh.chloride,
     chh.creatinine,
-    chh.glucose,
+    --chh.glucose,
     chh.sodium,
     chh.potassium,
     chh.magnesium,

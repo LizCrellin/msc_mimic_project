@@ -89,8 +89,9 @@ vitalsigns_agg AS
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = p.icustay_id
+    WHERE v.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+    AND v.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
     GROUP BY p.icustay_id
-    HAVING v.charttime < p.icu_inttime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
 ),
 --- more tables to be added
 
@@ -98,7 +99,7 @@ SELECT
     p.subject_id,
     p.hadm_id,
     p.icustay_id,
-    p.icu_inttime,
+    p.icu_intime,
     va.heart_rate_min,
     va.sbp_min,
     va.dbp_min,

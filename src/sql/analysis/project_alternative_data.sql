@@ -119,13 +119,7 @@ vitalsigns_agg AS
         EXTRACT(EPOCH FROM (MAX(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) AS heart_rate_last_time,
         --(ARRAY_AGG(v.charttime ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] AS heart_rate_last_time
         --Slope
-        REGR_SLOPE((ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1] - 
-                    (ARRAY_AGG(v.heart_rate ORDER BY v.charttime ASC) FILTER (WHERE v.heart_rate IS NOT NULL)) [1], 
-                    (EPOCH FROM (MAX(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime)) - 
-                    (EPOCH FROM (MIN(v.charttime) FILTER (WHERE v.heart_rate IS NOT NULL) - p.icu_intime))
-        ) AS heart_rate_slope
-
-
+        REGR_SLOPE(v.heart_rate, EXTRACT(EPOCH FROM v.charttime)) AS heart_rate_slope
 
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
@@ -195,10 +189,11 @@ SELECT
     va.temperature_count,
     va.spo2_count,
     va.glucose_vital_count,
-    heart_rate_first,
-    heart_rate_last,
-    heart_rate_first_time,
-    heart_rate_last_time
+    va.heart_rate_first,
+    va.heart_rate_last,
+    va.heart_rate_first_time,
+    va.heart_rate_last_time,
+    va.heart_rate_slope
 FROM patients as p
 LEFT JOIN vitalsigns_agg as va
     ON p.icustay_id = va.icustay_id;

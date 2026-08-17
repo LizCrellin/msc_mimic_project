@@ -86,6 +86,26 @@ vitalsign AS (
     ON p.icustay_id = vl.stay_id
     WHERE vl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
     AND vl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+),
+chemistry_long AS (
+    SELECT stay_id, charttime, 'albumin' as variable_name, albumin as value
+    from mimiciv_derived.chemistry where albumin is not null
+    UNION ALL
+
+
+
+        -- avg(c.globulin) AS globulin,
+        -- avg(c.total_protein) AS total_protein,
+        -- avg(c.aniongap) as aniongap,
+        -- avg(c.bicarbonate) as bicarbonate,
+        -- avg(c.bun) as bun,
+        -- avg(c.calcium) as calcium,
+        -- avg(c.chloride) as chloride,
+        -- avg(c.creatinine) as creatinine,
+        -- avg(c.glucose) as glucose,
+        -- avg(c.sodium) as sodium,
+        -- avg(c.potassium) as potassium,
+        -- avg(c.magnesium) as magnesium
 )
 -- will be adding and appending the other tables here.
 SELECT

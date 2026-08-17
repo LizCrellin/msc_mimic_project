@@ -95,7 +95,19 @@ vitalsigns_agg AS
         STDDEV_SAMP(v.resp_rate) AS resp_rate_std,
         STDDEV_SAMP(v.temperature) AS temperature_std,
         STDDEV_SAMP(v.spo2) AS spo2_std,
-        STDDEV_SAMP(v.glucose) AS glucose_vital_std
+        STDDEV_SAMP(v.glucose) AS glucose_vital_std,
+        --number of observations
+        COUNT(v.heart_rate) AS heart_rate_count,
+        COUNT(v.sbp) AS sbp_count,
+        COUNT(v.dbp) AS dbp_count,
+        COUNT(v.mbp) AS mbp_count,
+        COUNT(v.sbp_ni) AS sbp_ni_count,
+        COUNT(v.dbp_ni) AS dbp_ni_count,
+        COUNT(v.mbp_ni) AS mbp_ni_count,
+        COUNT(v.resp_rate) AS resp_rate_count,
+        COUNT(v.temperature) AS temperature_count,
+        COUNT(v.spo2) AS spo2_count,
+        COUNTP(v.glucose) AS glucose_vital_count
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = p.icustay_id
@@ -153,7 +165,18 @@ SELECT
     va.resp_rate_std,
     va.temperature_std,
     va.spo2_std,
-    va.glucose_vital_std
+    va.glucose_vital_std,
+    va.heart_rate_count,
+    va.sbp_count,
+    va.dbp_count,
+    va.mbp_count,
+    va.sbp_ni_count,
+    va.dbp_ni_count,
+    va.mbp_ni_count,
+    va.resp_rate_count,
+    va.temperature_count,
+    va.spo2_count,
+    va.glucose_vital_count
 FROM patients as p
 LEFT JOIN vitalsigns_agg as va
     ON p.icustay_id = va.icustay_id

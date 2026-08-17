@@ -82,7 +82,7 @@ vitalsign_long AS
     from mimiciv_derived.vitalsign where glucose is not null
 ),
 vitalsign AS (
-    SELECT p.icustay_id, p.icu_intime, vl.variable_name, vl.value, vl.charttime
+    SELECT p.subject_id, p.hadm_id, p.icustay_id, p.icu_intime, vl.variable_name, vl.value, vl.charttime
     FROM patients as p
     INNER JOIN vitalsign_long as vl
     ON p.icustay_id = vl.stay_id
@@ -130,7 +130,7 @@ chemistry_long AS (
     from mimiciv_derived.chemistry where magnesium is not null
 ),
 chemistry AS (
-    SELECT p.icustay_id, p.icu_intime, cl.variable_name, cl.value, cl.charttime
+    SELECT p.subject_id, p.hadm_id, p.icustay_id, p.icu_intime, cl.variable_name, cl.value, cl.charttime
     FROM patients as p
     INNER JOIN chemistry_long as cl
     ON p.hadm_id = cl.hadm_id
@@ -142,7 +142,7 @@ gcs_long AS (
     from mimiciv_derived.gcs where gcs is not null
 ),
 gcs AS (
-    SELECT p.icustay_id, p.icu_intime, gl.variable_name, gl.value, gl.charttime
+    SELECT p.subject_id, p.hadm_id, p.icustay_id, p.icu_intime, gl.variable_name, gl.value, gl.charttime
     FROM patients as p
     INNER JOIN gcs_long as gl
     ON p.icustay_id = gl.stay_id
@@ -181,7 +181,7 @@ blood_long AS (
     from mimiciv_derived.complete_blood_count where rbc is not null
 ),
 blood AS (
-    SELECT p.icustay_id, p.icu_intime, bl.variable_name, bl.value, bl.charttime
+    SELECT p.subject_id, p.hadm_id, p.icustay_id, p.icu_intime, bl.variable_name, bl.value, bl.charttime
     FROM patients as p
     INNER JOIN blood_long as bl
     ON p.hadm_id = bl.hadm_id
@@ -189,7 +189,9 @@ blood AS (
     AND bl.charttime >= p.icu_intime - INTERVAL '24' HOUR
 )
 SELECT
-    icustay_id
+    subject_id,
+    hadm_id,
+    icustay_id,
     icu_intime,
     variable_name,
     MIN(value) as value_min,

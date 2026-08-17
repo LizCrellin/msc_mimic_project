@@ -1,0 +1,137 @@
+-- -----------------------------------------------------------------------------
+--
+-- Drafted: 17 August 2026
+--
+-- Purpose:
+-- Restricting to the eligible cohort defined in msc_project.allpatients. 
+-- Restricting to the 24 hours before and after ICU admission
+-- Joining the different concepts together and creating aggregate variables:
+----- First observation
+----- Last observation
+----- Time of first observation
+----- Time of last observation
+----- Minimum
+----- Maximum
+----- Mean
+----- Standard deviation
+----- Number of observations
+----- Slope (but review this - avoid if it can be derived from others of these)
+--
+-- All stays are first ICU stays within first hospital stays, therefore
+-- joins can be made on hadm_id as well as stay_id and will stil relate to
+-- the same stay.
+-- Naming of icustay_id and hour variable have been updated to match up 
+-- with publicly available pipelines for ease of adapting their code. Specifically
+-- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
+--
+-- TO DO:
+-- Later: consider adding intervention events (ventilation, vasoactive agents)
+--
+-- -----------------------------------------------------------------------------
+
+
+DROP VIEW IF EXISTS msc_project.alternative_data;
+
+CREATE VIEW msc_project.alternative_data AS
+
+with patients AS
+(
+    SELECT
+        p.icustay_id,
+        p.subject_id,
+        p.hadm_id,
+        p.icu_intime
+    FROM msc_project.allpatients AS p
+    WHERE p.icu_outtime - p.icu_intime >= INTERVAL '24' HOUR   -- stay must be at least 24 hours
+),
+vitalsigns_agg AS
+(
+    SELECT
+        p.icustay_id,
+        -- Min:
+        MIN(v.heart_rate) AS heart_rate_min,
+        MIN(v.sbp) AS sbp_min,
+        MIN(v.dbp) AS dbp_min,
+        MIN(v.mbp) AS mbp_min,
+        MIN(v.sbp_ni) AS sbp_ni_min,
+        MIN(v.dbp_ni) AS dbp_ni_min,
+        MIN(v.mbp_ni) AS mbp_ni_min,
+        MIN(v.resp_rate) AS resp_rate_min,
+        MIN(v.temperature) AS temperature_min,
+        MIN(v.spo2) AS spo2_min,
+        MIN(v.glucose) AS glucose_vital_min,
+        -- Max:
+        MAX(v.heart_rate) AS heart_rate_max,
+        MAX(v.sbp) AS sbp_max,
+        MAX(v.dbp) AS dbp_max,
+        MAX(v.mbp) AS mbp_max,
+        MAX(v.sbp_ni) AS sbp_ni_max,
+        MAX(v.dbp_ni) AS dbp_ni_max,
+        MAX(v.mbp_ni) AS mbp_ni_max,
+        MAX(v.resp_rate) AS resp_rate_max,
+        MAX(v.temperature) AS temperature_max,
+        MAX(v.spo2) AS spo2_max,
+        MAX(v.glucose) AS glucose_vital_max,
+        -- Means:
+        AVG(v.heart_rate) AS heart_rate_avg,
+        AVG(v.sbp) AS sbp_avg,
+        AVG(v.dbp) AS dbp_avg,
+        AVG(v.mbp) AS mbp_avg,
+        AVG(v.sbp_ni) AS sbp_ni_avg,
+        AVG(v.dbp_ni) AS dbp_ni_avg,
+        AVG(v.mbp_ni) AS mbp_ni_avg,
+        AVG(v.resp_rate) AS resp_rate_avg,
+        AVG(v.temperature) AS temperature_avg,
+        AVG(v.spo2) AS spo2_avg,
+        AVG(v.glucose) AS glucose_vital_avg,
+        -- Std:
+
+    FROM patients as p
+    INNER JOIN mimiciv_derived.vitalsign AS v
+        ON v.stay_id = p.icustay_id
+    GROUP BY p.icustay_id
+    HAVING v.charttime < p.icu_inttime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+),
+--- more tables to be added
+
+SELECT
+    p.subject_id,
+    p.hadm_id,
+    p.icustay_id,
+    p.icu_inttime,
+    va.heart_rate_min,
+    va.sbp_min,
+    va.dbp_min,
+    va.mbp_min,
+    va.sbp_ni_min,
+    va.dbp_ni_min,
+    va.mbp_ni_min,
+    va.resp_rate_min,
+    va.temperature_min,
+    va.spo2_min,
+    va.glucose_vital_min,
+    va.heart_rate_max,
+    va.sbp_max,
+    va.dbp_max,
+    va.mbp_max,
+    va.sbp_ni_max,
+    va.dbp_ni_max,
+    va.mbp_ni_max,
+    va.resp_rate_max,
+    va.temperature_max,
+    va.spo2_max,
+    va.glucose_vital_max,
+    va.heart_rate_avg,
+    va.sbp_avg,
+    va.dbp_avg,
+    va.mbp_avg,
+    va.sbp_ni_avg,
+    va.dbp_ni_avg,
+    va.mbp_ni_avg,
+    va.resp_rate_avg,
+    va.temperature_avg,
+    va.spo2_avg,
+    va.glucose_vital_avg,
+FROM patients as p
+LEFT JOIN vitalsigns_agg as va
+    ON p.icustay_id = va.icustay_id

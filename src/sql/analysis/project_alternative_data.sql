@@ -109,9 +109,14 @@ vitalsigns_agg AS
         COUNT(v.spo2) AS spo2_count,
         COUNT(v.glucose) AS glucose_vital_count
         --First value
-        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime ASC))[1] AS heart_rate_first,
+        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime ASC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_first,
         --Last value
-        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC))[1] AS heart_rate_first,
+        (ARRAY_AGG(v.heart_rate ORDER BY v.charttime DESC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_last,
+        --Time of first value
+        (ARRAY_AGG(v.charttime ORDER BY v.charttime ASC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_first_time,
+        --Time of last value
+        (ARRAY_AGG(v.charttime ORDER BY v.charttime DESC))[1] FILTER (WHERE v.heart_rate IS NOT NULL) AS heart_rate_last_time,
+
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = p.icustay_id

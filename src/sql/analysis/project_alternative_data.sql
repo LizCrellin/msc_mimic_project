@@ -18,8 +18,10 @@
 ----- Slope (but review this - avoid if it can be derived from others of these)
 --
 -- All stays are first ICU stays within first hospital stays, therefore
--- joins can be made on hadm_id as well as stay_id and will stil relate to
+-- joins can be made on hadm_id as well as stay_id and will still relate to
 -- the same stay.
+-- Creating a long table which can be pivoted later to avoid having separate 
+-- lines of code for the creation of aggregate features for each variable.
 -- Naming of icustay_id and hour variable have been updated to match up 
 -- with publicly available pipelines for ease of adapting their code. Specifically
 -- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
@@ -91,23 +93,101 @@ chemistry_long AS (
     SELECT stay_id, charttime, 'albumin' as variable_name, albumin as value
     from mimiciv_derived.chemistry where albumin is not null
     UNION ALL
-
-
-
-        -- avg(c.globulin) AS globulin,
-        -- avg(c.total_protein) AS total_protein,
-        -- avg(c.aniongap) as aniongap,
-        -- avg(c.bicarbonate) as bicarbonate,
-        -- avg(c.bun) as bun,
-        -- avg(c.calcium) as calcium,
-        -- avg(c.chloride) as chloride,
-        -- avg(c.creatinine) as creatinine,
-        -- avg(c.glucose) as glucose,
-        -- avg(c.sodium) as sodium,
-        -- avg(c.potassium) as potassium,
-        -- avg(c.magnesium) as magnesium
+    SELECT stay_id, charttime, 'globulin' as variable_name, globulin as value
+    from mimiciv_derived.chemistry where globulin is not null
+    UNION ALL    
+    SELECT stay_id, charttime, 'total_protein' as variable_name, total_protein as value
+    from mimiciv_derived.chemistry where total_protein is not null
+    UNION ALL 
+    SELECT stay_id, charttime, 'aniongap' as variable_name, aniongap as value
+    from mimiciv_derived.chemistry where aniongap is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'bicarbonate' as variable_name, bicarbonate as value
+    from mimiciv_derived.chemistry where bicarbonate is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'bun' as variable_name, bun as value
+    from mimiciv_derived.chemistry where bun is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'calcium' as variable_name, calcium as value
+    from mimiciv_derived.chemistry where calcium is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'chloride' as variable_name, chloride as value
+    from mimiciv_derived.chemistry where chloride is not null
+    UNION ALL   
+    SELECT stay_id, charttime, 'creatinine' as variable_name, creatinine as value
+    from mimiciv_derived.chemistry where creatinine is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'glucose_lab' as variable_name, glucose as value
+    from mimiciv_derived.chemistry where glucose is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'sodium' as variable_name, sodium as value
+    from mimiciv_derived.chemistry where sodium is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'potassium' as variable_name, potassium as value
+    from mimiciv_derived.chemistry where potassium is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'magnesium' as variable_name, magnesium as value
+    from mimiciv_derived.chemistry where magnesium is not null
+),
+chemistry AS (
+    SELECT p.icustay_id, p.icu_intime, cl.variable_name, cl.value, cl.charttime
+    FROM patients as p
+    INNER JOIN chemistry_long as cl
+    ON p.icustay_id = cl.stay_id
+    WHERE cl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+    AND cl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+), 
+gcs_long AS (
+    SELECT stay_id, charttime, 'gcs' as variable_name, gcs as value
+    from mimiciv_derived.gcs where gcs is not null
+),
+gcs AS (
+    SELECT p.icustay_id, p.icu_intime, gl.variable_name, gl.value, gl.charttime
+    FROM patients as p
+    INNER JOIN gcs as gl
+    ON p.icustay_id = gl.stay_id
+    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
+), 
+blood_long AS (
+    SELECT stay_id, charttime, 'hematocrit' as variable_name, hematocrit as value
+    from mimiciv_derived.complete_blood_count where hematocrit is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'hemoglobin' as variable_name, hemoglobin as value
+    from mimiciv_derived.complete_blood_count where hemoglobin is not null
+    UNION ALL    
+    SELECT stay_id, charttime, 'mch' as variable_name, mch as value
+    from mimiciv_derived.complete_blood_count where mch is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'mchc' as variable_name, mchc as value
+    from mimiciv_derived.complete_blood_count where mchc is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'mcv' as variable_name, mcv as value
+    from mimiciv_derived.complete_blood_count where mcv is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'platelet' as variable_name, platelet as value
+    from mimiciv_derived.complete_blood_count where platelet is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'rbc' as variable_name, rbc as value
+    from mimiciv_derived.complete_blood_count where rbc is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'rdw' as variable_name, rdw as value
+    from mimiciv_derived.complete_blood_count where rdw is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'wbc' as variable_name, wbc as value
+    from mimiciv_derived.complete_blood_count where wbc is not null
+    UNION ALL
+    SELECT stay_id, charttime, 'rbc' as variable_name, rbc as value
+    from mimiciv_derived.complete_blood_count where rbc is not null
+),
+blood AS (
+    SELECT p.icustay_id, p.icu_intime, bl.variable_name, bl.value, bl.charttime
+    FROM patients as p
+    INNER JOIN blood_long as bl
+    ON p.icustay_id = bl.stay_id
+    WHERE gl.charttime <= p.icu_intime + INTERVAL '24' HOUR    -- observation must be within first 24 hours of ICU stay
+    AND gl.charttime >= p.icu_intime - INTERVAL '24' HOUR      -- getting labs also from 24 h prior to admission, where available
 )
--- will be adding and appending the other tables here.
 SELECT
     icustay_id
     icu_intime,

@@ -85,7 +85,17 @@ vitalsigns_agg AS
         AVG(v.spo2) AS spo2_avg,
         AVG(v.glucose) AS glucose_vital_avg,
         -- Std:
-
+        STDDEV_SAMP(v.heart_rate) AS heart_rate_std,
+        STDDEV_SAMP(v.sbp) AS sbp_std,
+        STDDEV_SAMP(v.dbp) AS dbp_std,
+        STDDEV_SAMP(v.mbp) AS mbp_std,
+        STDDEV_SAMP(v.sbp_ni) AS sbp_ni_std,
+        STDDEV_SAMP(v.dbp_ni) AS dbp_ni_std,
+        STDDEV_SAMP(v.mbp_ni) AS mbp_ni_std,
+        STDDEV_SAMP(v.resp_rate) AS resp_rate_std,
+        STDDEV_SAMP(v.temperature) AS temperature_std,
+        STDDEV_SAMP(v.spo2) AS spo2_std,
+        STDDEV_SAMP(v.glucose) AS glucose_vital_std
     FROM patients as p
     INNER JOIN mimiciv_derived.vitalsign AS v
         ON v.stay_id = p.icustay_id
@@ -133,6 +143,17 @@ SELECT
     va.temperature_avg,
     va.spo2_avg,
     va.glucose_vital_avg,
+    va.heart_rate_std,
+    va.sbp_std,
+    va.dbp_std,
+    va.mbp_std,
+    va.sbp_ni_std,
+    va.dbp_ni_std,
+    va.mbp_ni_std,
+    va.resp_rate_std,
+    va.temperature_std,
+    va.spo2_std,
+    va.glucose_vital_std
 FROM patients as p
 LEFT JOIN vitalsigns_agg as va
     ON p.icustay_id = va.icustay_id

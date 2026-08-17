@@ -199,9 +199,9 @@ SELECT
     COUNT(value) as value_count,
     (ARRAY_AGG(value ORDER BY charttime ASC)) [1] AS value_first,
     (ARRAY_AGG(value ORDER BY charttime DESC)) [1] AS value_last,
-    EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) AS value_first_time,
-    EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) AS value_last_time,
-    REGR_SLOPE(value, EXTRACT(EPOCH FROM charttime)) AS value_slope
+    EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) / 3600 AS value_first_time,
+    EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) / 3600 AS value_last_time,
+    REGR_SLOPE(value, (EXTRACT(EPOCH FROM charttime) / 3600) ) AS value_slope
 FROM vitalsign
 GROUP BY icustay_id, icu_intime, variable_name
 ORDER BY icustay_id, variable_name;

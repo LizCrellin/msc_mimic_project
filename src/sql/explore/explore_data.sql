@@ -126,3 +126,6 @@ select * from msc_project.hourly_data LIMIT 20;
 select * from msc_project.hourly_data LIMIT 20; --started 22.17. finished 22.21.
 select * from msc_project.hourly_data LIMIT 50; --started 08.16. completed in 4 min 26 s.
 
+-------------------
+--look at full alternatively representation data
+select * from msc_project.alternative_data LIMIT 50; 

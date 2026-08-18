@@ -184,6 +184,15 @@ blood AS (
     ON p.hadm_id = bl.hadm_id
     WHERE bl.charttime <= p.icu_intime + INTERVAL '24' HOUR
     AND bl.charttime >= p.icu_intime - INTERVAL '24' HOUR
+),
+all_tables AS (
+    SELECT * FROM vitalsign
+    UNION ALL
+    SELECT * FROM chemistry
+    UNION ALL
+    SELECT * FROM gcs
+    UNION ALL
+    SELECT * FROM blood
 )
 SELECT
     subject_id,
@@ -200,6 +209,6 @@ SELECT
     EXTRACT(EPOCH FROM (MIN(charttime) - icu_intime)) / 3600 AS value_first_time,
     EXTRACT(EPOCH FROM (MAX(charttime) - icu_intime)) / 3600 AS value_last_time,
     REGR_SLOPE(value, (EXTRACT(EPOCH FROM charttime) / 3600) ) AS value_slope
-FROM vitalsign
+FROM all_tables
 GROUP BY subject_id, hadm_id, icustay_id, icu_intime, variable_name
 ORDER BY icustay_id, variable_name;

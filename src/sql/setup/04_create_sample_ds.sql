@@ -87,3 +87,10 @@ SELECT p.*
 FROM msc_project.allpatients AS p
 INNER JOIN msc_project.sample_stays AS s
   ON p.icustay_id = s.icustay_id;
+
+DROP TABLE IF EXISTS msc_project.sample_alternative_data;
+CREATE TABLE msc_project.sample_alternative_data AS
+SELECT ad.*
+FROM msc_project.alternative_data AS ad
+INNER JOIN msc_project.sample_stays AS s
+  ON ad.icustay_id = s.icustay_id;

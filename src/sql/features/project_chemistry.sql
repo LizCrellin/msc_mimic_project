@@ -20,7 +20,7 @@
 
 --DROP VIEW IF EXISTS msc_project.chemistry;
 --CREATE VIEW msc_project.chemistry AS
-DROP TABLE IF EXISTS mimiciv_derived.chemistry; CREATE TABLE mimiciv_derived.chemistry AS
+DROP TABLE IF EXISTS mimiciv_derived.chemistry CASCADE; CREATE TABLE mimiciv_derived.chemistry AS
 /* extract chemistry labs */ /* excludes point of care tests (very rare) */ /* blood gas measurements are *not* included in this query */ /* instead they are in bg.sql */
 SELECT
   MAX(subject_id) AS subject_id,
@@ -39,7 +39,7 @@ SELECT
   MAX(CASE WHEN itemid = 50931 AND valuenum <= 10000 THEN valuenum ELSE NULL END) AS glucose,
   MAX(CASE WHEN itemid = 50983 AND valuenum <= 200 THEN valuenum ELSE NULL END) AS sodium,
   MAX(CASE WHEN itemid = 50971 AND valuenum <= 30 THEN valuenum ELSE NULL END) AS potassium,
-  MAX(CASE WHEN itemid = 50960 THEN valuenum ELSE NULL END) AS magnesium     -- identify physiological plausibility limit for magnesium after importing the data
+  MAX(CASE WHEN itemid = 50960 AND valuenum <= 20 THEN valuenum ELSE NULL END) AS magnesium     -- added approx physiological plausibility limit for magnesium
 FROM mimiciv_hosp.labevents AS le
 WHERE
   le.itemid IN (

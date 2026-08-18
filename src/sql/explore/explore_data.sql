@@ -129,3 +129,19 @@ select * from msc_project.hourly_data LIMIT 50; --started 08.16. completed in 4 
 -------------------
 --look at full alternatively representation data
 select * from msc_project.alternative_data LIMIT 50; 
+
+
+----
+-- check sample stays
+SELECT icustay_id, COUNT(*)
+FROM msc_project.sample_stays
+GROUP BY icustay_id
+HAVING COUNT(*) > 1;
+
+
+-----
+-- look at units for magnesium in mimiciv_hosp.labevents
+SELECT valueuom, value
+FROM mimiciv_hosp.labevents
+WHERE itemid = 50960
+LIMIT 20;

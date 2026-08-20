@@ -15,6 +15,9 @@
 -- with publicly available pipelines for ease of adapting their code. Specifically
 -- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
 --
+-- Changes:
+-- 2026-08-20 removed non-invasive bp measures
+--
 -- TO DO:
 -- Later: consider adding intervention events (ventilation, vasoactive agents)
 --
@@ -46,9 +49,9 @@ vitalsigns_hourly AS
         AVG(v.sbp) AS sbp,
         AVG(v.dbp) AS dbp,
         AVG(v.mbp) AS mbp,
-        AVG(v.sbp_ni) AS sbp_ni,
-        AVG(v.dbp_ni) AS dbp_ni,
-        AVG(v.mbp_ni) AS mbp_ni,
+        -- AVG(v.sbp_ni) AS sbp_ni,
+        -- AVG(v.dbp_ni) AS dbp_ni,
+        -- AVG(v.mbp_ni) AS mbp_ni,
         AVG(v.resp_rate) AS resp_rate,
         AVG(v.temperature) AS temperature,
         AVG(v.spo2) AS spo2,
@@ -130,9 +133,9 @@ SELECT
     vh.sbp,
     vh.dbp,
     vh.mbp,
-    vh.sbp_ni,
-    vh.dbp_ni,
-    vh.mbp_ni,
+    -- vh.sbp_ni,
+    -- vh.dbp_ni,
+    -- vh.mbp_ni,
     vh.temperature,
     vh.spo2,
     vh.glucose_vital,

@@ -26,6 +26,9 @@
 -- with publicly available pipelines for ease of adapting their code. Specifically
 -- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
 --
+-- Changes:
+-- 2026-08-20 removed non-invasive bp measures
+--
 -- TO DO:
 -- Later: consider adding intervention events (ventilation, vasoactive agents)
 --
@@ -60,15 +63,15 @@ vitalsign_long AS
     SELECT stay_id, charttime, 'mbp' as variable_name, mbp as value
     from mimiciv_derived.vitalsign where mbp is not null
     UNION ALL
-    SELECT stay_id, charttime, 'sbp_ni' as variable_name, sbp_ni as value
-    from mimiciv_derived.vitalsign where sbp_ni is not null
-    UNION ALL
-    SELECT stay_id, charttime, 'dbp_ni' as variable_name, dbp_ni as value
-    from mimiciv_derived.vitalsign where dbp_ni is not null
-    UNION ALL
-    SELECT stay_id, charttime, 'mbp_ni' as variable_name, mbp_ni as value
-    from mimiciv_derived.vitalsign where mbp_ni is not null
-    UNION ALL
+    -- SELECT stay_id, charttime, 'sbp_ni' as variable_name, sbp_ni as value
+    -- from mimiciv_derived.vitalsign where sbp_ni is not null
+    -- UNION ALL
+    -- SELECT stay_id, charttime, 'dbp_ni' as variable_name, dbp_ni as value
+    -- from mimiciv_derived.vitalsign where dbp_ni is not null
+    -- UNION ALL
+    -- SELECT stay_id, charttime, 'mbp_ni' as variable_name, mbp_ni as value
+    -- from mimiciv_derived.vitalsign where mbp_ni is not null
+    -- UNION ALL
     SELECT stay_id, charttime, 'resp_rate' as variable_name, resp_rate as value
     from mimiciv_derived.vitalsign where resp_rate is not null
     UNION ALL

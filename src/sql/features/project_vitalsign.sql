@@ -12,6 +12,7 @@
 --
 -- Changes:
 -- - 2026-07-26 dropped temperature site (commented out) as not required
+-- - 2026-08-20 dropped non-invasive blood pressure measures as not required (and included in general blood pressure measures)
 --
 -- TO DO:
 -- 
@@ -20,7 +21,7 @@
 
 --DROP VIEW IF EXISTS msc_project.vitalsign;
 --CREATE VIEW msc_project.vitalsign AS
-DROP TABLE IF EXISTS mimiciv_derived.vitalsign; CREATE TABLE mimiciv_derived.vitalsign AS
+DROP TABLE IF EXISTS mimiciv_derived.vitalsign CASCADE; CREATE TABLE mimiciv_derived.vitalsign AS
 
 /* This query pivots the vital signs for the entire patient stay. */ /* The result is a table with stay_id, charttime, and various */ /* vital signs, with one row per charted time. */
 SELECT
@@ -48,9 +49,9 @@ SELECT
       THEN valuenum
     END
   ) AS mbp,
-  AVG(CASE WHEN itemid = 220179 AND valuenum > 0 AND valuenum < 400 THEN valuenum END) AS sbp_ni,
-  AVG(CASE WHEN itemid = 220180 AND valuenum > 0 AND valuenum < 300 THEN valuenum END) AS dbp_ni,
-  AVG(CASE WHEN itemid = 220181 AND valuenum > 0 AND valuenum < 300 THEN valuenum END) AS mbp_ni,
+  -- AVG(CASE WHEN itemid = 220179 AND valuenum > 0 AND valuenum < 400 THEN valuenum END) AS sbp_ni,
+  -- AVG(CASE WHEN itemid = 220180 AND valuenum > 0 AND valuenum < 300 THEN valuenum END) AS dbp_ni,
+  -- AVG(CASE WHEN itemid = 220181 AND valuenum > 0 AND valuenum < 300 THEN valuenum END) AS mbp_ni,
   AVG(
     CASE
       WHEN itemid IN (220210, 224690) AND valuenum > 0 AND valuenum < 70
@@ -86,9 +87,9 @@ WHERE
     220050, /* Arterial Blood Pressure systolic */
     220051, /* Arterial Blood Pressure diastolic */
     220052, /* Arterial Blood Pressure mean */
-    220179, /* Non Invasive Blood Pressure systolic */
-    220180, /* Non Invasive Blood Pressure diastolic */
-    220181, /* Non Invasive Blood Pressure mean */
+    -- 220179, /* Non Invasive Blood Pressure systolic */
+    -- 220180, /* Non Invasive Blood Pressure diastolic */
+    -- 220181, /* Non Invasive Blood Pressure mean */
     220210, /* Respiratory Rate */
     224690, /* Respiratory Rate (Total) */
     220277, /* SPO2, peripheral */ /* GLUCOSE, both lab and fingerstick */

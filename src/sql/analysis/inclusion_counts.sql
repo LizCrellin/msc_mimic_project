@@ -5,9 +5,6 @@
 --- This is an adaptation of the original cohort extraction in src/sql/cohort/patients.sql
 -- -----------------------------------------------------------------------------
 
-DROP VIEW IF EXISTS msc_project.allpatients CASCADE;
-
-CREATE VIEW msc_project.allpatients AS
 
 -- Every ICU stay
 SELECT 
@@ -28,6 +25,10 @@ SELECT
     THEN TRUE
     ELSE FALSE
   END AS first_hosp_stay, /* icu level factors */
+  ROUND(
+    CAST(FLOOR(EXTRACT(EPOCH FROM (ie.outtime - ie.intime)) / 3600) / 24.0 AS DECIMAL(38, 9)),
+    2
+  ) AS los_icu,
   CASE
     WHEN DENSE_RANK() OVER (PARTITION BY ie.hadm_id ORDER BY ie.intime NULLS FIRST) = 1
     THEN TRUE
@@ -41,18 +42,33 @@ INNER JOIN mimiciv_hosp.patients AS pat
 
 SELECT 
   COUNT(*) AS n_stays,
-  COUNT(DISTINCT ie.subject_id) as n_patients
+  COUNT(DISTINCT subject_id) as n_patients
 FROM mimiciv_derived.patient_counts;
+
+-- admission age >= 18
+SELECT 
+  COUNT(*) AS n_stays,
+  COUNT(DISTINCT subject_id) as n_patients
+FROM mimiciv_derived.patient_counts
+WHERE admission_age >= 18;
 
 --First ICU admission
 SELECT 
   COUNT(*) AS n_stays,
-  COUNT(DISTINCT ie.subject_id) as n_patients
-FROM mimiciv_derived.patient_counts;
-WHERE first_icu_stay = TRUE
+  COUNT(DISTINCT subject_id) as n_patients
+FROM mimiciv_derived.patient_counts
+WHERE admission_age >= 18
+AND first_icu_stay = TRUE
 AND first_hosp_stay = TRUE;
 
 -- ICU stay of at least one day
+SELECT 
+  COUNT(*) AS n_stays,
+  COUNT(DISTINCT subject_id) as n_patients
+FROM mimiciv_derived.patient_counts
+WHERE admission_age >= 18
+AND first_icu_stay = TRUE
+AND first_hosp_stay = TRUE
+AND los_icu >= 1;
 
-AND los_icu >= 1
-AND admission_age >= 18;
+

@@ -47,7 +47,6 @@ with patients AS
         p.hadm_id,
         p.icu_intime
     FROM msc_project.allpatients AS p
-    WHERE p.icu_outtime - p.icu_intime >= INTERVAL '24' HOUR   -- stay must be at least 24 hours
 ),
 vitalsign_long AS
 (

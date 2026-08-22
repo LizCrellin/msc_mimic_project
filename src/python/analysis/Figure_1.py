@@ -107,8 +107,13 @@ icu_stays['admission_location'] = icu_stays['admission_location'].apply(categori
 group0 = icu_stays[icu_stays['los_7'] == 0]
 group1 = icu_stays[icu_stays['los_7'] == 1]
 
-# continuous variables
 rows = []
+# Totals
+rows.append({'variable': 'Total',
+             'los_7 = 0': f'{len(group0)}',
+             'los_7 = 1': f'{len(group1)}'}) 
+
+# continuous variables
 for var in ['admission_age', 'los_icu', 'los_hosp']:
     rows.append({
         'variable': var,
@@ -126,10 +131,6 @@ for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hosp
             'los_7 = 0': f'{(group0[var] == cat).sum()} ({(group0[var] == cat).sum()/len(group0) * 100:.2f}%)',
             'los_7 = 1': f'{(group1[var] == cat).sum()} ({(group1[var] == cat).sum()/len(group1) * 100:.2f}%)'
         })
-
-rows.append({'variable': 'Total',
-             'los_7 = 0': f'{group0.sum()},
-             'los_7 = 1': f'{group1.sum()}}) 
 
 table1 = pd.DataFrame(rows)
 print(table1)

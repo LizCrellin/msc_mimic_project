@@ -25,10 +25,8 @@ SELECT
     THEN TRUE
     ELSE FALSE
   END AS first_hosp_stay, /* icu level factors */
-  ROUND(
-    CAST(FLOOR(EXTRACT(EPOCH FROM (ie.outtime - ie.intime)) / 3600) / 24.0 AS DECIMAL(38, 9)),
-    2
-  ) AS los_icu,
+  ie.intime AS icu_intime,
+  ie.outtime AS icu_outtime,
   CASE
     WHEN DENSE_RANK() OVER (PARTITION BY ie.hadm_id ORDER BY ie.intime NULLS FIRST) = 1
     THEN TRUE
@@ -69,6 +67,4 @@ FROM mimiciv_derived.patient_counts
 WHERE admission_age >= 18
 AND first_icu_stay = TRUE
 AND first_hosp_stay = TRUE
-AND los_icu >= 1;
-
-
+AND icu_outtime - icu_intime >= INTERVAL '24' HOUR;  --replaced los_icu >= 1 as the los_icu calculation is rounded, I need exactly 24 hours.

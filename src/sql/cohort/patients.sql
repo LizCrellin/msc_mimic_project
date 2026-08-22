@@ -11,7 +11,7 @@
 -- - Creation of view rather than tables
 -- - Limits the output to ICU stays that meet inclusion criteria for the project:
 -- - - First ICU stay for each patient
--- - - ICU stay of at least 1 day
+-- - - ICU stay of at least 1 day (based on exact in and out dates, not LOS calculation which is rounded)
 -- - - Patient age at admission >= 18
 -- - - Added admission type and admission location
 -- - Does not retain flags for first hospital or ICU stay_id or stay sequence
@@ -84,5 +84,5 @@ SELECT
 FROM allpatients
 WHERE first_icu_stay = TRUE
 AND first_hosp_stay = TRUE
-AND los_icu >= 1
+AND icu_outtime - icu_intime >= INTERVAL '24' HOUR  --replaced los_icu >= 1 as the los_icu calculation is rounded, I need exactly 24 hours
 AND admission_age >= 18;

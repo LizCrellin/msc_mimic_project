@@ -62,9 +62,16 @@ rows = []
 for var in ['admission_age', 'los_icu', 'los_hosp']:
     rows.append({
         'variable': var,
-        'los_7 = 0': f'{group0[var].mean()} \u00B1 {group0[var].std()}',
-        'los_7 = 1': f'{group1[var].mean()} \u00B1 {group1[var].std()}'
+        'los_7 = 0': f'{group0[var].mean():.2f} \u00B1 {group0[var].std():.2f}',
+        'los_7 = 1': f'{group1[var].mean():.2f} \u00B1 {group1[var].std():.2f}'
     })
+
+# categorical variables
+
+print(sorted(icu_stays['gender'].unique(), key=str))
+
+#for var in ['gender', 'race', 'admission_type', 'admission_location', 'hospital_expire_flag'],
+    
 
 table1 = pd.DataFrame(rows)
 print(table1)

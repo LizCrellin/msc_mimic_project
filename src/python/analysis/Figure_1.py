@@ -3,14 +3,12 @@
 # hhttps://github.com/MLforHealth/MIMIC_Extract
 #
 # Original file:
-# MIMIC-Extract/notebooks/Summary Stats.ipynb
+# MIMIC-Extract/notebooks/Summary Stats.ipynb  - UPDATE - ONLY SMALL BITS FROM THIS FILE USED IN THE END.
 #
 # Accessed: 21 August 2026
 #
 # Modifications compared to original file:
 # 
-# 
-#
 # TO DO:
 # 
 #############################
@@ -47,11 +45,36 @@ print(icu_stays.shape)
 
 # Cohort characteristics for LOS >= 7 days versus shorter length of stay
 
+# PREP LOS_7 VARIABLE
 icu_stays['los_7'] = (icu_stays['los_icu'] > 7).astype(int)
 
+# PREP OTHER VARIABLES
 # get length of stay in hospital
 icu_stays['los_hosp'] = (icu_stays['dischtime'] - icu_stays['admittime']).dt.days
 print(icu_stays['los_hosp'])
+
+# Ethnicity - this function adapted from Wang et al.
+def categorize_ethnicity(ethnicity):
+    if 'ASIAN' in ethnicity:
+        ethnicity = 'ASIAN'
+    elif 'WHITE' in ethnicity:
+        ethnicity = 'WHITE'
+    elif 'HISPANIC' in ethnicity:
+        ethnicity = 'HISPANIC/LATINO'
+    elif 'BLACK' in ethnicity:
+        ethnicity = 'BLACK'
+    elif 'AMERICAN INDIAN' in ethnicity:
+        ethnicity = 'AMERICAN INDIAN'
+    elif 'UNKNOWN' in ethnicity or 'UNABLE TO OBTAIN' in ethnicity or 'DECLINED TO ANSWER' in ethnicity:  # ADDED UNKNOWN CATEGORY
+        ethnicity = 'UNKNOWN'
+    else: 
+        ethnicity = 'OTHER'
+    return ethnicity
+
+icu_stays['ethnicity'] = categorize_ethnicity(icu_stays['race'])
+print(sorted(icu_stays['race'].unique(), key=str))
+print(sorted(icu_stays['ethnicity'].unique(), key=str))
+
 
 # Two groups, LOS >= 7 and the rest
 group0 = icu_stays[icu_stays['los_7'] == 0]
@@ -67,10 +90,15 @@ for var in ['admission_age', 'los_icu', 'los_hosp']:
     })
 
 # categorical variables
+#print(sorted(icu_stays['gender'].unique(), key=str))
 
-print(sorted(icu_stays['gender'].unique(), key=str))
-
-#for var in ['gender', 'race', 'admission_type', 'admission_location', 'hospital_expire_flag'],
+for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hospital_expire_flag']:
+    for cat in sorted(icu_stays[var].unique(), key=str):
+        rows.append({
+            'variable': f'{var}, {cat}',
+            'los_7 = 0': f'{(group0[var] == cat).sum()}',
+            'los_7 = 1': f'{(group1[var] == cat).sum()}'
+        })
     
 
 table1 = pd.DataFrame(rows)

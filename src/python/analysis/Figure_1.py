@@ -71,7 +71,7 @@ def categorize_ethnicity(ethnicity):
         ethnicity = 'OTHER'
     return ethnicity
 
-icu_stays['ethnicity'] = categorize_ethnicity(icu_stays['race'])
+icu_stays['ethnicity'] = icu_stays['race'].apply(categorize_ethnicity)
 print(sorted(icu_stays['race'].unique(), key=str))
 print(sorted(icu_stays['ethnicity'].unique(), key=str))
 

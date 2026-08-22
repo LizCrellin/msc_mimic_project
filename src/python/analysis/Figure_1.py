@@ -16,11 +16,14 @@
 
 import numpy as np
 import pandas as pd
-from scipy.stats import ttest_ind_from_stats, spearmanr
-from sklearn.preprocessing import StandardScaler
-import matplotlib.pyplot as plt
+from pathlib import Path
 import getpass
 from sqlalchemy import create_engine
+
+
+PROJECT_ROOT = Path.cwd().parents[0]   # adjust after checking Path.cwd()
+TABLES_DIR = PROJECT_ROOT / 'msc_project' / 'results' / 'tables'
+
 
 pg_user = 'postgres'      # same value you use to connect via psql
 pg_host = 'localhost'          # or wherever your Postgres server is
@@ -63,8 +66,6 @@ def categorize_ethnicity(ethnicity):
         ethnicity = 'HISPANIC/LATINO'
     elif 'BLACK' in ethnicity:
         ethnicity = 'BLACK'
-    elif 'AMERICAN INDIAN' in ethnicity:
-        ethnicity = 'AMERICAN INDIAN'
     elif 'UNKNOWN' in ethnicity or 'UNABLE TO OBTAIN' in ethnicity or 'DECLINED TO ANSWER' in ethnicity:  # ADDED UNKNOWN CATEGORY
         ethnicity = 'UNKNOWN'
     else: 
@@ -91,20 +92,12 @@ def categorize_adm_type(admission_type):
 
 icu_stays['admission_type'] = icu_stays['admission_type'].apply(categorize_adm_type)
 
-# Admission location
+# Admission location - here I just want to know if admitted from the emergency room or not
 def categorize_adm_loc(admission_location):
     if 'EMERGENCY' in admission_location:
         admission_location = 'Emergency room'
-    elif 'PHYSICIAN REFERRAL' in admission_location or 'CLINIC REFERRAL' in admission_location:
-        admission_location = 'Referral'
-    elif 'WALK-IN/SELF REFERRAL' in admission_location:
-        admission_location = 'Self-referral'
-    elif 'TRANSFER FROM HOSPITAL' in admission_location or 'TRANSFER FROM SKILLED NURSING' in admission_location:
-        admission_location = 'Transfer'
-    elif 'AMBULATORY SURGERY TRANSFER' in admission_location or 'PACU' in admission_location or 'PROCEDURE SITE' in admission_location:
-        admission_location = 'Procedure'
     else: 
-        admission_location = 'Unknown'
+        admission_location = 'Other/Unknown'
     return admission_location
 
 icu_stays['admission_location'] = icu_stays['admission_location'].apply(categorize_adm_loc)
@@ -130,10 +123,15 @@ for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hosp
     for cat in sorted(icu_stays[var].unique(), key=str):
         rows.append({
             'variable': f'{var}, {cat}',
-            'los_7 = 0': f'{(group0[var] == cat).sum()}',
-            'los_7 = 1': f'{(group1[var] == cat).sum()}'
+            'los_7 = 0': f'{(group0[var] == cat).sum()} ({(group0[var] == cat).sum()/len(group0) * 100:.2f}%)',
+            'los_7 = 1': f'{(group1[var] == cat).sum()} ({(group1[var] == cat).sum()/len(group1) * 100:.2f}%)'
         })
-    
+
+rows.append({'variable': 'Total',
+             'los_7 = 0': f'{group0.sum()},
+             'los_7 = 1': f'{group1.sum()}}) 
 
 table1 = pd.DataFrame(rows)
 print(table1)
+
+table1.to_csv(TABLES_DIR / 'table1_los7.csv', index=False)

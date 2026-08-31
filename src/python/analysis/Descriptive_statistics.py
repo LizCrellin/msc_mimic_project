@@ -1,7 +1,5 @@
 ###############################################
-# Based on the MIMIC-Extract repository:
-# hhttps://github.com/MLforHealth/MIMIC_Extract
-#
+# Generation of descriptive tables
 #
 # Drafted: 21 August 2026
 #
@@ -172,7 +170,7 @@ for var in ['admission_age', 'los_icu', 'los_hosp']:
             })
 
 # categorical variables
-for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hospital_expire_flag']:
+for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hospital_expire_flag', 'los_7']:
     for cat in sorted(icu_stays[var].unique(), key=str):
         rows2.append({
             'variable': f'{var}, {cat}',

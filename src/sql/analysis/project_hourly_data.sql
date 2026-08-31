@@ -136,6 +136,7 @@ SELECT
     -- vh.sbp_ni,
     -- vh.dbp_ni,
     -- vh.mbp_ni,
+    vh.resp_rate,
     vh.temperature,
     vh.spo2,
     vh.glucose_vital,

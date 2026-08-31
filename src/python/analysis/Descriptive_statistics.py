@@ -15,6 +15,8 @@ import pandas as pd
 from pathlib import Path
 import getpass
 from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
 
 
 PROJECT_ROOT = Path.cwd().parents[0]   # adjust after checking Path.cwd()
@@ -147,3 +149,29 @@ table1.to_csv(TABLES_DIR / 'table1_los7.csv', index=False)
 
 Ys_train = pd.read_parquet(DATA_DIR / 'Ys_train.parquet', engine='pyarrow')
 Ys_dev = pd.read_parquet(DATA_DIR / 'Ys_dev.parquet', engine='pyarrow')
+
+train_ids = set(Ys_train.index.get_level_values('icustay_id'))
+dev_ids = set(Ys_dev.index.get_level_values('icustay_id'))
+
+group_train = icu_stays[icu_stays['icustay_id'].isin(train_ids)]
+group_dev = icu_stays[icu_stays['icustay_id'].isin(dev_ids)]
+
+rows2 = []
+# Totals
+rows2.append({'variable': 'Total',
+             'Train': f'{len(group_train)}',
+             'Dev': f'{len(group_dev)}'
+             })
+
+# continuous variables
+for var in ['admission_age', 'los_icu', 'los_hosp']:
+    rows2.append({
+        'variable': f'{var} (median [IQR])',
+        'Train': f'{group_train[var].median():.2f}[{group_train[var].quantile(0.25):.2f}\u2013{group_train[var].quantile(0.75):.2f}]',
+        'Dev': f'{group_dev[var].median():.2f}[{group_dev[var].quantile(0.25):.2f}\u2013{group_dev[var].quantile(0.75):.2f}]'
+            })
+
+table2 = pd.DataFrame(rows2)
+print(table2)
+
+table2.to_csv(TABLES_DIR / 'table2_train_dev.csv', index=False)

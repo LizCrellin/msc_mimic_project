@@ -171,6 +171,15 @@ for var in ['admission_age', 'los_icu', 'los_hosp']:
         'Dev': f'{group_dev[var].median():.2f}[{group_dev[var].quantile(0.25):.2f}\u2013{group_dev[var].quantile(0.75):.2f}]'
             })
 
+# categorical variables
+for var in ['gender', 'ethnicity', 'admission_type', 'admission_location', 'hospital_expire_flag']:
+    for cat in sorted(icu_stays[var].unique(), key=str):
+        rows2.append({
+            'variable': f'{var}, {cat}',
+            'Train': f'{(group_train[var] == cat).sum()} ({(group_train[var] == cat).sum()/len(group_train) * 100:.2f}%)',
+            'Dev': f'{(group_dev[var] == cat).sum()} ({(group_dev[var] == cat).sum()/len(group_dev) * 100:.2f}%)'
+                    })
+
 table2 = pd.DataFrame(rows2)
 print(table2)
 

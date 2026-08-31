@@ -2,13 +2,9 @@
 # Based on the MIMIC-Extract repository:
 # hhttps://github.com/MLforHealth/MIMIC_Extract
 #
-# Original file:
-# MIMIC-Extract/notebooks/Summary Stats.ipynb  - UPDATE - ONLY SMALL BITS FROM THIS FILE USED IN THE END.
 #
-# Accessed: 21 August 2026
+# Drafted: 21 August 2026
 #
-# Modifications compared to original file:
-# 
 # TO DO:
 # 
 #############################
@@ -23,6 +19,10 @@ from sqlalchemy import create_engine
 
 PROJECT_ROOT = Path.cwd().parents[0]   # adjust after checking Path.cwd()
 TABLES_DIR = PROJECT_ROOT / 'msc_project' / 'results' / 'tables'
+
+load_dotenv()
+BACKUP_ROOT = Path(os.environ["BACKUP_ROOT"])
+DATA_DIR = BACKUP_ROOT / 'results' / 'data'
 
 
 pg_user = 'postgres'      # same value you use to connect via psql
@@ -56,7 +56,7 @@ icu_stays['los_7'] = (icu_stays['los_icu'] > 7).astype(int)
 icu_stays['los_hosp'] = (icu_stays['dischtime'] - icu_stays['admittime']).dt.days
 print(icu_stays['los_hosp'])
 
-# Ethnicity - this function adapted from Wang et al.
+# Ethnicity - this function was adapted from MIMIC-Extract/notebooks/Summary Stats.ipynb
 def categorize_ethnicity(ethnicity):
     if 'ASIAN' in ethnicity:
         ethnicity = 'ASIAN'
@@ -102,7 +102,7 @@ def categorize_adm_loc(admission_location):
 
 icu_stays['admission_location'] = icu_stays['admission_location'].apply(categorize_adm_loc)
 
-
+# Split by outcome for the table:
 # Two groups, LOS >= 7 and the rest
 group0 = icu_stays[icu_stays['los_7'] == 0]
 group1 = icu_stays[icu_stays['los_7'] == 1]
@@ -140,3 +140,10 @@ table1 = pd.DataFrame(rows)
 print(table1)
 
 table1.to_csv(TABLES_DIR / 'table1_los7.csv', index=False)
+
+
+# Table for Train and Dev datasets to investigate representativeness of training dataset
+# Use the split generated in the modelling notebook
+
+Ys_train = pd.read_parquet(DATA_DIR / 'Ys_train.parquet', engine='pyarrow')
+Ys_dev = pd.read_parquet(DATA_DIR / 'Ys_dev.parquet', engine='pyarrow')

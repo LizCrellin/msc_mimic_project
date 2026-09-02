@@ -13,6 +13,7 @@
 -- Changes:
 -- - 2026-07-26 dropped temperature site (commented out) as not required
 -- - 2026-08-20 dropped non-invasive blood pressure measures as not required (and included in general blood pressure measures)
+-- - 2026-09-02 added max bound for glucose to deal with odd placeholder values
 --
 -- TO DO:
 -- 
@@ -75,7 +76,7 @@ SELECT
   AVG(
     CASE WHEN itemid IN (220277) AND valuenum > 0 AND valuenum <= 100 THEN valuenum END
   ) AS spo2,
-  AVG(CASE WHEN itemid IN (225664, 220621, 226537) AND valuenum > 0 THEN valuenum END) AS glucose
+  AVG(CASE WHEN itemid IN (225664, 220621, 226537) AND valuenum > 0 AND valuenum < 9999 THEN valuenum END) AS glucose  -- added max value to deal with placeholder values '999999' or '9999'
 FROM mimiciv_icu.chartevents AS ce
 WHERE
   NOT ce.stay_id IS NULL

@@ -146,3 +146,20 @@ SELECT valueuom, value
 FROM mimiciv_hosp.labevents
 WHERE itemid = 50960
 LIMIT 20;
+
+
+-------
+-- check glucose - noticed odd max values
+SELECT 
+    MIN(glucose), 
+    MAX(glucose),
+    AVG(glucose),
+    COUNT(*)
+FROM mimiciv_derived.vitalsign
+WHERE glucose IS NOT NULL;
+
+SELECT
+    glucose
+from mimiciv_derived.vitalsign
+WHERE glucose IS NOT NULL
+ORDER BY glucose desc limit 50;

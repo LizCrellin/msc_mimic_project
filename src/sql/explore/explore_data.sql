@@ -147,6 +147,12 @@ FROM mimiciv_hosp.labevents
 WHERE itemid = 50960
 LIMIT 20;
 
+-- look at units for glucose in mimiciv_icu.chartevents
+SELECT valueuom, value
+FROM mimiciv_icu.chartevents
+WHERE itemid = 220621
+LIMIT 20;
+
 
 -------
 -- check glucose - noticed odd max values

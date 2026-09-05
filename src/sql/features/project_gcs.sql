@@ -8,7 +8,7 @@
 -- Accessed: 24 July 2026
 --
 -- Modifications:
--- - Simplified as only need GCS score not individual components.
+-- - Simplified, as I only need GCS score, not individual components.
 -- - added an index.
 --
 -- TO DO:

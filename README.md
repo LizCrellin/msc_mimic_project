@@ -4,6 +4,23 @@
 ## Aims and objectives
 <p>The overall aim of this project is to develop and evaluate predictive models for prolonged length of stay in ICUs using routinely collected data. This study will approach this with a focus on representations of temporal clinical data and investigate how these influence model performance.</p>
 
+## DATASETS
+NB MIMIC IV data are not stored in this repository.<br>
+This study uses the MIMIC database, a large publicly available dataset consisting of de-identified data recorded during patient stays in critical care units.  The dataset has been de-identified in accordance with the Health Insurance Portability and Accountability Act (HIPAA) Safe Harbor provision.  The Institutional Review Board of the Beth Israel Deaconess Medical Center approved the sharing of the dataset and granted a waiver of informed consent. Access to the dataset is controlled by PhysioNet, requiring completing of training and signing a data use agreement that prohibits re-identification of individuals and mandates secure data handling practices.<br>
+Johnson, A.E.W., Bulgarelli, L., Shen, L., Gayles, A., Shammout, A., Horng, S., Pollard, T.J., Hao, S., Moody, B., Gow, B., Lehman, L.H., Celi, L.A. and Mark, R.G. (2023) “MIMIC-IV, a freely accessible electronic health record dataset,” Scientific Data, 10(1), p. 1. Available at: https://doi.org/10.1038/s41597-022-01899-x.<br>
+
+## Code re-used from other sources
+The official MIMIC Code repository was used, with adaptations, to create the PostgreSQL schema, import tables and extract clinical concepts:<br>
+MIT-LCP/mimic-code: MIMIC Code v2.2.1<br>
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6818823.svg)](https://doi.org/10.5281/zenodo.6818823)<br>
+https://github.com/MIT-LCP/mimic-code
+
+The MIMIC_Extract pipeline was used, with adaptations, to do parts of the data processing, develop the models, tune hyperparameters and run the logistic regression and random forest models:<br>
+Wang, S., McDermott, M.B.A., Chauhan, G., Ghassemi, M., Hughes, M.C. and Naumann, T. (2020) “MIMIC-Extract: A Data Extraction, Preprocessing, and Representation Pipeline for MIMIC-III,” ACM CHIL 2020 - Proceedings of the 2020 ACM Conference on Health, Inference, and Learning. Association for Computing Machinery, Inc, pp. 222–235. Available at: https://doi.org/10.1145/3368555.3384469.<br>
+https://github.com/MLforHealth/MIMIC_Extract
+
+Use of code from both repositories is noted in individual scripts where relevant.
+
 ## Software
 - Windows 11
 - postgresql 18.4
@@ -11,13 +28,12 @@
 - Git 
 - Git Bash
 - PostgreSQL Management Tool extension for VS Code by Chris Kolkman
-- Python (see requirements.txt)
+- Python (see requirements.txt for a full list of libraries)
 - Data Wrangler (Microsoft)
-
 
 ## Setup
 The PostgreSQL schemas and tables were created using the create.sql script from the MIMIC Code repository (https://github.com/MIT-LCP/mimic-code/tree/main). This script was run against a PostgreSQL 18.4 database before importing any data.<br>
-Data were imported using the load_gz.sql script from the MIMIC code repository. Due to limitations to local storage, tables were imported individually by temporarily commenting out only the required \COPY statements.<br>
+Data were imported using adapted version of the load_gz.sql script from the MIMIC code repository. Due to limitations to local storage, tables were imported individually in separate SQL scripts.<br>
 The project assumes:
 
 - PostgreSQL database: mimiciv
@@ -35,7 +51,7 @@ psql -U postgres -d mimiciv -v mimic_data_dir="Z:/MSc/mimic-iv-3.1" -f load_gz_s
 - Command to run a script:<br>
 psql -U postgres -d mimiciv -f load_icustays.sql
 
-overall using:<br>
+Overall using:<br>
 - VS Code for editing and Git version control.
 - PostgreSQL extension for running ad hoc queries (with Select Connection at the start of a session).
 - psql -f in Git Bash for running complete setup/import pipelines and reproducible scripts.
@@ -48,13 +64,6 @@ overall using:<br>
 
 ## Usage guidelines
 
-## To do (code)
-- Create one import script which calls each of the individual imports
-
-
-## DATASETS
-NB MIMIC IV data are not stored in this repository.<br>
-Description here of the MIMIC IV dataset and how it has been accessed, access limitations etc.<br>
 
 
 ## SCRIPTS
@@ -80,7 +89,6 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Features | `sql/features/project_chemistry.sql` | labevents table | derived chemistry table | extracts relevant concepts for chemistry, setting physiologically implausible values as null |
 | Features | `sql/features/project_complete_blood_count.sql` | labevents table | derived complete_blood_count table | extracts relevant concepts for blood counts, setting physiologically implausible values as null | 
 | Features | `sql/features/project_gcs.sql` | chartevents table | derived gcs table | calculates Glasgow coma scale from relevant codes in chartevents |
-| Features | `sql/features/project_rrt.sql` | NA | NA | NA to drop |
 | Features | `sql/features/project_ventdurations.sql` | chartevents table | derived ventdurations table | calculates start and end times for mechanical ventilation |
 | Features | `sql/features/project_vitalsign.sql` | chartevents table | derived vitalsign table | extracts relevant concepts for vital signs |
 | Features | `sql/features/project_dobutamine.sql` | inputevents table | derived dobutamine table | extracts start and end times for this drug |
@@ -91,7 +99,9 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Features | `sql/features/project_phenylephrine.sql` | inputevents table | derived phenylephrine table | extracts start and end times for this drug |
 | Features | `sql/features/project_vasopressin.sql` | inputevents table | derived vasopressin table | extracts start and end times for this drug |
 | Features | `sql/features/project_vasoactive_agent.sql` | derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | 
-| Analysis | `sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_data view | Restricting to the eligible cohort defined in allpatients, joins vital signs to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged |
+| Analysis | `sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_aggregated representation | Restricting to the eligible cohort defined in allpatients, joins concepts to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged |
+| Analysis | `sql/analysis/project_alternative_data.sql` | allpatients, all derived features tables | derived summary representation | Restricting to the eligible cohort defined in allpatients, a range of summary features are derived from each clinical concept |
+| Analysis | `sql/analysis/inclusion_counts.sql` | icustays table | mimiciv_derived.patient_counts table | Generates counts for the inclusion diagram | 
 | Functions | `python/setup/setup_fun.py` | NA | NA | All setup functions in python |
 
 
@@ -99,3 +109,4 @@ Description here of the MIMIC IV dataset and how it has been accessed, access li
 | Name | Purpose | 
 | ---- | ----- |
 | 1_Understand_Wang_pipeline.ipynb | Explore machine learning pipeline to understand approach and relevant adaptations for this project |
+| 2_Descriptive_statistics_features.ipynb | Describe the features in the two derived representations |

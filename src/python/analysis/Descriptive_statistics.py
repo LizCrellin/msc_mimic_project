@@ -1,5 +1,7 @@
 ###############################################
 # Generation of descriptive tables
+# 
+# Functions deriving categorical variables were adapted from MIMIC-Extract/notebooks/Summary Stats.ipynb
 #
 # Drafted: 21 August 2026
 #

@@ -2,7 +2,8 @@
 -- Purpose:
 --- Get counts of patients at each stage of applying inclusion criteria,
 --- for an inclusion diagram.
---- This is an adaptation of the original cohort extraction in src/sql/cohort/patients.sql
+--- This is an adaptation of the original cohort extraction developed in this 
+--- project, src/sql/cohort/patients.sql
 -- -----------------------------------------------------------------------------
 
 

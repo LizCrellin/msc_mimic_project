@@ -15,7 +15,7 @@
 ----- Mean
 ----- Standard deviation
 ----- Number of observations
------ Slope (but review this - avoid if it can be derived from others of these)
+----- Slope 
 --
 -- All stays are first ICU stays within first hospital stays, therefore
 -- joins can be made on hadm_id as well as stay_id and will still relate to
@@ -24,7 +24,7 @@
 -- lines of code for the creation of aggregate features for each variable.
 -- Naming of icustay_id and hour variable have been updated to match up
 -- with publicly available pipelines for ease of adapting their code. Specifically
--- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
+-- MIMIC_Extract: https://github.com/MLforHealth/MIMIC_Extract/tree/master
 --
 -- Changes:
 -- 2026-08-20 removed non-invasive bp measures

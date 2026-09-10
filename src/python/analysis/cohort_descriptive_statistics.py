@@ -1,7 +1,15 @@
 ###############################################
-# Generation of descriptive tables
 # 
-# Functions deriving categorical variables were adapted from MIMIC-Extract/notebooks/Summary Stats.ipynb
+# Purpose:
+# Generation of descriptive tables for the cohort of patients included in the analysis.
+# 
+# The functions deriving categories for ethnicity/race were adapted from the MIMIC_Extract pipeline, 
+# (MIMIC-Extract/notebooks/Summary Stats.ipynb)
+# Wang, S., McDermott, M.B.A., Chauhan, G., Ghassemi, M., Hughes, M.C. and Naumann, T. (2020) 
+# “MIMIC-Extract: A Data Extraction, Preprocessing, and Representation Pipeline for 
+# MIMIC-III,” ACM CHIL 2020 - Proceedings of the 2020 ACM Conference on Health, Inference, and 
+# Learning. Association for Computing Machinery, Inc, pp. 222–235. 
+# Available at: https://doi.org/10.1145/3368555.3384469.<br>
 #
 # Drafted: 21 August 2026
 #

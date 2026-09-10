@@ -11,9 +11,9 @@
 -- All stays are first ICU stays within first hospital stays, therefore
 -- joins can be made on hadm_id as well as stay_id and will stil relate to
 -- the same stay.
--- Naming of icustay_id and hour variable have been updated to match up 
--- with publicly available pipelines for ease of adapting their code. Specifically
--- this one: https://github.com/MLforHealth/MIMIC_Extract/tree/master
+-- Naming of icustay_id and hour variable have been updated to match naming in 
+-- publicly available pipelines for ease of adapting their code. Specifically
+-- MIMIC_Extract: https://github.com/MLforHealth/MIMIC_Extract/tree/master
 --
 -- Changes:
 -- 2026-08-20 removed non-invasive bp measures
@@ -21,7 +21,7 @@
 -- TO DO:
 -- Later: consider adding intervention events (ventilation, vasoactive agents)
 --
--- -----------------------------------------------------------------------------
+-- ---------------------------------------------------------------------
 
 
 DROP VIEW IF EXISTS msc_project.hourly_data;

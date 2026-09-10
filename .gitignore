@@ -21,6 +21,9 @@ data/
 # Results
 results/
 
+# Docs
+docs/
+
 # PostgreSQL exports
 *.sql.bak
 *.dump

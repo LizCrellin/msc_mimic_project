@@ -1,9 +1,12 @@
-###############################
-# functions for setup
+
+############################################################################################
+# File: python/setup/setup_fun.py
+# Created: 18 July 2026
 #
-# to do:
-# type hints, error handling
-#############################
+# Purpose: Functions for the setup stage, chiefly filtering raw tables prior to import
+# into the database. 
+#
+############################################################################################
 
 
 import pandas as pd

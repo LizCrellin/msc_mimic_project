@@ -1,7 +1,6 @@
 ############################################################################################
 # File: python/setup/filter_chartevents.py
 # Created: 18 July 2026
-# Last amended 19 July 2026
 #
 # Purpose: This script filters the chartevents table to only the itemids that I need
 # for concepts that will be derived, in order to minimise storage needed for the database.
@@ -14,8 +13,11 @@
 
 from pathlib import Path
 import setup_fun as fun
+import os
+from dotenv import load_dotenv
 
-mimic_data_dir = Path("Z:/MSc/mimic-iv-3.1")
+load_dotenv()
+mimic_data_dir = Path(os.environ["MIMIC_DATA_DIR"])
 input_file = mimic_data_dir / "icu" / "chartevents.csv.gz"
 itemid_file = Path("docs/itemid_list_chartevents.csv")
 output_file = mimic_data_dir / "icu" / "chartevents_filtered.csv"

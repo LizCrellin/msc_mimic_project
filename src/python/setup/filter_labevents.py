@@ -14,8 +14,11 @@
 
 from pathlib import Path
 import setup_fun as fun
+import os
+from dotenv import load_dotenv
 
-mimic_data_dir = Path("Z:/MSc/mimic-iv-3.1")
+load_dotenv()
+mimic_data_dir = Path(os.environ["MIMIC_DATA_DIR"])
 input_file = mimic_data_dir / "hosp" / "labevents.csv.gz"
 itemid_file = Path("docs/itemid_list_labevents.csv")
 output_file = mimic_data_dir / "hosp" / "labevents_filtered.csv"

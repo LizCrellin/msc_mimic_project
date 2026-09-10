@@ -1,6 +1,7 @@
 -- -----------------------------------------------------------------------------
--- Based on the mimic-iv-aline-study:
--- https://github.com/alistairewj/mimic-iv-aline-study/
+-- Based on the official MIMIC Code repository:
+-- MIT-LCP/mimic-code: MIMIC Code v2.2.1
+-- https://doi.org/10.5281/zenodo.6818823
 --
 -- Original file:
 -- sql/ventdurations.sql

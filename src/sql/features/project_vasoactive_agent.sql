@@ -1,6 +1,7 @@
 -- -----------------------------------------------------------------------------
 -- Based on the official MIMIC Code repository:
--- https://github.com/MIT-LCP/mimic-code
+-- MIT-LCP/mimic-code: MIMIC Code v2.2.1
+-- https://doi.org/10.5281/zenodo.6818823
 --
 -- Original file:
 -- mimic-iv/buildmimic/concepts_postgres/medication/vasoactive_agent.sql
@@ -19,7 +20,7 @@
 
 
 
---First run each of the individual drug scripts
+--First run each of the individual drug scripts (commented out after running)
 -- \i sql/features/project_dobutamine.sql
 -- \i sql/features/project_dopamine.sql
 -- \i sql/features/project_epinephrine.sql

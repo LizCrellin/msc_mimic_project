@@ -1,6 +1,7 @@
 -- -----------------------------------------------------------------------------
 -- Based on the official MIMIC Code repository:
--- https://github.com/MIT-LCP/mimic-code
+-- MIT-LCP/mimic-code: MIMIC Code v2.2.1
+-- https://doi.org/10.5281/zenodo.6818823
 --
 -- Original file:
 -- mimic-iv/buildmimic/concepts_postgres/measurement/chemistry.sql
@@ -8,12 +9,9 @@
 -- Accessed: 18 July 2026
 --
 -- Modifications compared to original file:
--- - Added magnesium (itemid code 50960)
+-- - Added magnesium (itemid code 50960) with plausible physiological limit of 20 mmol/L
 -- - Added an index to the table
 --
--- TO DO:
--- - Add physiological plausibile limit for magnesium 
--- - Review physiological plausibility limits for each lab value after import.
 -- 
 -- -----------------------------------------------------------------------------
 

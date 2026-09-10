@@ -35,6 +35,8 @@ Use of code from both repositories is noted in individual scripts where relevant
 - Access to the MIMIC IV v3.1 data via PhysioNet (see Datasets section above for access requirements)
 - Enough disk space for the raw source MIMIC IV v3.1 to be downloaded and stored (approximately 22 GB unzipped) and the PostgreSQL database once set up (approximately 24 GB. NB this is smaller than the full MIMIC IV v3.1 database as only the tables required for the proejct are imported and the largest tables are filtered.)
 
+### Steps to set up and run the project
+
 1. Clone the repository
 
 ``` 
@@ -94,7 +96,7 @@ Run scripts under `src/sql/features`.  <br>
 See the full list of scripts for information on which are essential to the final outputs.<br>
 
 iv) Analysis prep<br>
-Build the two representations:
+Build the two representations:<br>
 `src/sql/analysis/project_hourly_data.sql` <br>
 `src/sql/analysis/project_alternative_data.sql`<br>
 

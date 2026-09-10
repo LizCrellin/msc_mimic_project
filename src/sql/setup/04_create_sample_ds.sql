@@ -5,9 +5,9 @@
 -- Purpose:
 -- Create a random sample of 50 ICU stays, and extracts data relevant to these
 -- stays from each of the MIMIC tables I'm using for this project.
--- This sample extract will be used for local testing.
+-- This sample extract will be used for local testing, and the model development
+-- notebook can be run using this sample.
 --
--- TO DO:
 --
 -- -----------------------------------------------------------------------------
 

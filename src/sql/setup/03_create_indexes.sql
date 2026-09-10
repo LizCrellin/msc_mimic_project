@@ -11,7 +11,6 @@
 -- For labevents, this will be on itemid, hadm_id and charttime for the same
 -- reasons. 
 --
--- TO DO:
 --
 -- -----------------------------------------------------------------------------
 

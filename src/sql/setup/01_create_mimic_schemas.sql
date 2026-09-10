@@ -1,7 +1,7 @@
-
 -- -----------------------------------------------------------------------------
 -- Based on the official MIMIC Code repository:
--- https://github.com/MIT-LCP/mimic-code
+-- MIT-LCP/mimic-code: MIMIC Code v2.2.1
+-- https://doi.org/10.5281/zenodo.6818823
 --
 -- Original file:
 -- mimic-iv/buildmimic/postgres/create.sql

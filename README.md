@@ -13,7 +13,7 @@ Johnson, A.E.W., Bulgarelli, L., Shen, L., Gayles, A., Shammout, A., Horng, S., 
 ## Code re-used from other sources
 The official MIMIC Code repository was used, with adaptations, to create the PostgreSQL schema, import tables and extract clinical concepts:<br>
 MIT-LCP/mimic-code: MIMIC Code v2.2.1<br>
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6818823.svg)](https://doi.org/10.5281/zenodo.6818823)<br>
+https://doi.org/10.5281/zenodo.6818823<br>
 https://github.com/MIT-LCP/mimic-code
 
 The MIMIC_Extract pipeline was used, with adaptations, to do parts of the data processing, develop the models, tune hyperparameters and run the logistic regression and random forest models:<br>

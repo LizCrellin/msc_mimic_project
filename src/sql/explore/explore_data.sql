@@ -1,3 +1,12 @@
+-- -----------------------------------------------------------------------------
+--
+-- Purpose:
+-- Exploration and testing of the SQL scripts created for the project.
+--
+-- -----------------------------------------------------------------------------
+
+
+
 select * from msc_project.allpatients LIMIT 10;
 select * from msc_project.first_icu_stays LIMIT 10;
 select * from msc_project.icustay_hourly LIMIT 100;

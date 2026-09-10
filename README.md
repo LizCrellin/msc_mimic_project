@@ -84,8 +84,8 @@ psql -U postgres -d mimiciv -f icustay_hourly.sql
 ```
 
 i) Setup - run remaining set up scripts:<br>
-`03_create_indexes.sql`<br>
-`04_create_sample_ds.sql`- optional creation of sample dataset for testing and iteration<br>
+`src/sql/setup/03_create_indexes.sql`<br>
+`src/sql/setup/04_create_sample_ds.sql`- optional creation of sample dataset for testing and iteration<br>
 
 ii) Cohort<br>
 `src/sql/cohort/patients.sql`<br>

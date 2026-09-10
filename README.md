@@ -1,4 +1,4 @@
-# MSc Data Science final project
+# MSc Data Science project
 ## Prediction of prolonged length of stay in intensive care units using routinely collected data: impact of temporal data representation
 
 ## Aims
@@ -112,7 +112,7 @@ Prepare, train and evaluate models for the two derived representations:<br>
 The notebooks connect to PostgreSQL, and will prompt for the Postgres password interactively when run.<br>
 `notebooks/modelling_notebook.ipynb` has a 'testing' flag which can be set to run the notebook on the test/sample datasets, if created (`04_create_sample_ds.sql`).
 
-## SCRIPTS
+## Scripts
 
 ### Repository structure
 | Folder | Purpose | 

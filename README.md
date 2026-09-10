@@ -102,12 +102,12 @@ Overall using:<br>
 | Analysis | `sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_aggregated representation | Restricting to the eligible cohort defined in allpatients, joins concepts to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged |
 | Analysis | `sql/analysis/project_alternative_data.sql` | allpatients, all derived features tables | derived summary representation | Restricting to the eligible cohort defined in allpatients, a range of summary features are derived from each clinical concept |
 | Analysis | `sql/analysis/inclusion_counts.sql` | icustays table | mimiciv_derived.patient_counts table | Generates counts for the inclusion diagram | 
-| Analysis | `python/analysis/Descriptive_statistics.sql` | allpatients table | descriptive table output | Generates a table describing study cohort characteristics | 
+| Analysis | `python/analysis/cohort_descriptive_statistics.sql` | allpatients table | descriptive table output | Generates a table describing study cohort characteristics | 
 | Functions | `python/setup/setup_fun.py` | NA | NA | All setup functions in python |
 
 
 ## NOTEBOOKS
 | Name | Purpose | 
 | ---- | ----- |
-| 1_Understand_Wang_pipeline.ipynb | Explore machine learning pipeline to understand approach and relevant adaptations for this project |
-| 2_Descriptive_statistics_features.ipynb | Describe the features in the two derived representations |
+| modelling_notebook | Prepare, train and evaluate models for the two derived representations |
+| feature_exploration_notebook.ipynb | Explore and describe the features in the two derived representations |

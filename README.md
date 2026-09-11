@@ -93,7 +93,7 @@ ii) Cohort<br>
 
 iii) Features<br>
 Run scripts under `src/sql/features`.  <br>
-See the full list of scripts for information on which are essential to the final outputs.<br>
+See the full list of scripts for information on which are essential to the final outputs, and dependencies for `src/sql/features/project_vasoactive_agent.sql`.<br>
 
 iv) Analysis prep<br>
 Build the two representations:<br>
@@ -134,42 +134,42 @@ The notebooks connect to PostgreSQL, and will prompt for the Postgres password i
 | Setup | `src/sql/setup/02_create_project_schemas.sql` | NA | NA | Sets up ready to load data | Yes |
 | Setup | `src/sql/setup/03_create_indexes.sql` | NA | NA | Indexing the larger tables for faster processing | No | 
 | Setup | `src/sql/setup/04_create_sample_ds.sql` | NA | NA | Creates a test version of the database tables based on a random sample of 50 ICU stays | No |
-| Setup | `src/python/setup/filter_chartevents.py` | Raw chartevents table | Filtered version of raw chartevents table | Filters the chartevents table to only required codes and columns | N | 
-| Setup | `src/python/setup/filter_labevents.py` | Raw labevents table | Filtered version of raw labevents table | Filters the labevents table to only required codes and columns | N |
-| Setup | `src/sql/setup/import/load_admissions.sql` | Raw admissions table | Populated table in database | Loads admissions into the database | Y |
-| Setup | `src/sql/setup/import/load_chartevents.sql` | Filtered chartevents table | Populated table in database | Loads chartevents into the database | Y |
-| Setup | `src/sql/setup/import/load_d_items.sql` | Raw d_items table | Populated table in database | Loads d_items into the database | Y |
-| Setup | `src/sql/setup/import/load_d_labitems.sql` | Raw d_labitems table | Populated table in database | Loads d_labitems into the database | Y |
-| Setup | `src/sql/setup/import/load_icustays.sql` | Raw icustays table | Populated table in database | Loads icustays into the database | Y |
-| Setup | `src/sql/setup/import/load_inputevents.sql` | Raw inputevents table | Populated table in database | Loads inputevents into the database | Y |
-| Setup | `src/sql/setup/import/load_labevents.sql` | Filtered labevents table | Populated table in database | Loads labevents into the database | Y |
-| Setup | `src/sql/setup/import/load_patients.sql` | Raw patients table | Populated table in database | Loads patients into the database | Y |
-| Cohort | `src/sql/cohort/patients.sql` | icustays table, patients table, admissions table | derived allpatients view with all ICU stays and details about patient, hospital admission and ICU stay | Extracts relevant details for the eligible ICU stays | Y |
-| Cohort | `src/sql/cohort/icustay_hourly.sql` | icustays table | derived icustay_hourly view with a row per ICU stay per hour | generates hourly spine | Y |
-| Features | `src/sql/features/project_chemistry.sql` | labevents table | derived chemistry table | extracts relevant concepts for chemistry, setting physiologically implausible values as null | Y |
-| Features | `src/sql/features/project_complete_blood_count.sql` | labevents table | derived complete_blood_count table | extracts relevant concepts for blood counts, setting physiologically implausible values as null | Y |
-| Features | `src/sql/features/project_gcs.sql` | chartevents table | derived gcs table | calculates Glasgow coma scale from relevant codes in chartevents | Y |
-| Features | `src/sql/features/project_ventdurations.sql` | chartevents table | derived ventdurations table | calculates start and end times for mechanical ventilation | N |
-| Features | `src/sql/features/project_vitalsign.sql` | chartevents table | derived vitalsign table | extracts relevant concepts for vital signs | Y |
-| Features | `src/sql/features/project_dobutamine.sql` | inputevents table | derived dobutamine table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_dopamine.sql` | inputevents table | derived dopamine table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_epinephrine.sql` | inputevents table | derived epinephrine table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_milrinone.sql` | inputevents table | derived milrinone table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_norepinephrine.sql` | inputevents table | derived norepinephrine table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_phenylephrine.sql` | inputevents table | derived phenylephrine table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_vasopressin.sql` | inputevents table | derived vasopressin table | extracts start and end times for this drug | N |
-| Features | `src/sql/features/project_vasoactive_agent.sql` | derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | N |
-| Features | `src/sql/features/project_RRT.sql` | chartevents, inputevents and procedureevents tables | extracts times of RRT (present or active) | N |
-| Analysis | `src/sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_aggregated representation | Restricting to the eligible cohort defined in allpatients, joins concepts to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged | Y |
-| Analysis | `src/sql/analysis/project_alternative_data.sql` | allpatients, all derived features tables | derived summary representation | Restricting to the eligible cohort defined in allpatients, a range of summary features are derived from each clinical concept | Y |
-| Analysis | `src/sql/analysis/inclusion_counts.sql` | icustays table | mimiciv_derived.patient_counts table | Generates counts for the inclusion diagram | Y |
-| Analysis | `src/python/analysis/cohort_descriptive_statistics.py` | allpatients table | descriptive table output | Generates a table describing study cohort characteristics | Y |
-| Functions | `src/python/setup/setup_fun.py` | NA | NA | All setup functions in python | Y | 
-| Explore | `src/sql/explore/explore_data.sql` | NA | NA | General purpose script for exploring the database tables | N | 
+| Setup | `src/python/setup/filter_chartevents.py` | Raw chartevents table | Filtered version of raw chartevents table | Filters the chartevents table to only required codes and columns | No | 
+| Setup | `src/python/setup/filter_labevents.py` | Raw labevents table | Filtered version of raw labevents table | Filters the labevents table to only required codes and columns | No |
+| Setup | `src/sql/setup/import/load_admissions.sql` | Raw admissions table | Populated table in database | Loads admissions into the database | Yes |
+| Setup | `src/sql/setup/import/load_chartevents.sql` | Filtered chartevents table | Populated table in database | Loads chartevents into the database | Yes |
+| Setup | `src/sql/setup/import/load_d_items.sql` | Raw d_items table | Populated table in database | Loads d_items into the database | Yes |
+| Setup | `src/sql/setup/import/load_d_labitems.sql` | Raw d_labitems table | Populated table in database | Loads d_labitems into the database | Yes |
+| Setup | `src/sql/setup/import/load_icustays.sql` | Raw icustays table | Populated table in database | Loads icustays into the database | Yes |
+| Setup | `src/sql/setup/import/load_inputevents.sql` | Raw inputevents table | Populated table in database | Loads inputevents into the database | Yes |
+| Setup | `src/sql/setup/import/load_labevents.sql` | Filtered labevents table | Populated table in database | Loads labevents into the database | Yes |
+| Setup | `src/sql/setup/import/load_patients.sql` | Raw patients table | Populated table in database | Loads patients into the database | Yes |
+| Cohort | `src/sql/cohort/patients.sql` | icustays table, patients table, admissions table | derived allpatients view with all ICU stays and details about patient, hospital admission and ICU stay | Extracts relevant details for the eligible ICU stays | Yes |
+| Cohort | `src/sql/cohort/icustay_hourly.sql` | icustays table | derived icustay_hourly view with a row per ICU stay per hour | generates hourly spine | Yes |
+| Features | `src/sql/features/project_chemistry.sql` | labevents table | derived chemistry table | extracts relevant concepts for chemistry, setting physiologically implausible values as null | Yes |
+| Features | `src/sql/features/project_complete_blood_count.sql` | labevents table | derived complete_blood_count table | extracts relevant concepts for blood counts, setting physiologically implausible values as null | Yes |
+| Features | `src/sql/features/project_gcs.sql` | chartevents table | derived gcs table | calculates Glasgow coma scale from relevant codes in chartevents | Yes |
+| Features | `src/sql/features/project_ventdurations.sql` | chartevents table | derived ventdurations table | calculates start and end times for mechanical ventilation | No |
+| Features | `src/sql/features/project_vitalsign.sql` | chartevents table | derived vitalsign table | extracts relevant concepts for vital signs | Yes |
+| Features | `src/sql/features/project_dobutamine.sql` | inputevents table | derived dobutamine table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_dopamine.sql` | inputevents table | derived dopamine table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_epinephrine.sql` | inputevents table | derived epinephrine table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_milrinone.sql` | inputevents table | derived milrinone table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_norepinephrine.sql` | inputevents table | derived norepinephrine table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_phenylephrine.sql` | inputevents table | derived phenylephrine table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_vasopressin.sql` | inputevents table | derived vasopressin table | extracts start and end times for this drug | No |
+| Features | `src/sql/features/project_vasoactive_agent.sql` | derived tables for vasoactive agents | derived vasoactive_agent view | generates start and end times for any vasoactive agent | No |
+| Features | `src/sql/features/project_RRT.sql` | chartevents, inputevents and procedureevents tables | extracts times of RRT (present or active) | No |
+| Analysis | `src/sql/analysis/project_hourly_data.sql` | icustay_hourly, allpatients, all derived features tables | derived hourly_aggregated representation | Restricting to the eligible cohort defined in allpatients, joins concepts to the hourly time series spine (icustay_hourly), with values falling in hourly buckets. Where there are more than one value within an hour, these are averaged | Yes |
+| Analysis | `src/sql/analysis/project_alternative_data.sql` | allpatients, all derived features tables | derived summary representation | Restricting to the eligible cohort defined in allpatients, a range of summary features are derived from each clinical concept | Yes |
+| Analysis | `src/sql/analysis/inclusion_counts.sql` | icustays table | mimiciv_derived.patient_counts table | Generates counts for the inclusion diagram | Yes |
+| Analysis | `src/python/analysis/cohort_descriptive_statistics.py` | allpatients table | descriptive table output | Generates a table describing study cohort characteristics | Yes |
+| Functions | `src/python/setup/setup_fun.py` | NA | NA | All setup functions in python | Yes | 
+| Explore | `src/sql/explore/explore_data.sql` | NA | NA | General purpose script for exploring the database tables | No | 
 
 ## NOTEBOOKS
 | Name | Purpose | Required to generate outputs |
 | ---- | ----- | --- |
-| `notebooks/feature_exploration_notebook.ipynb` | Explore and describe the features in the two derived representations | Y |
-| `notebooks/modelling_notebook.ipynb` | Prepare, train and evaluate models for the two derived representations | Y |
+| `notebooks/feature_exploration_notebook.ipynb` | Explore and describe the features in the two derived representations | Yes |
+| `notebooks/modelling_notebook.ipynb` | Prepare, train and evaluate models for the two derived representations | Yes |
 

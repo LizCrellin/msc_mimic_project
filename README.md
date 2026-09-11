@@ -83,11 +83,13 @@ Example:
 psql -U postgres -d mimiciv -f icustay_hourly.sql
 ```
 
-i) Setup - run remaining set up scripts:<br>
+i) Setup<br>
+Run remaining set up scripts:<br>
 `src/sql/setup/03_create_indexes.sql`<br>
 `src/sql/setup/04_create_sample_ds.sql`- optional creation of sample dataset for testing and iteration<br>
 
 ii) Cohort<br>
+Run two scripts:<br>
 `src/sql/cohort/patients.sql`<br>
 `src/sql/cohort/icustay_hourly.sql`<br>
 
@@ -95,7 +97,7 @@ iii) Features<br>
 Run scripts under `src/sql/features`.  <br>
 See the full list of scripts for information on which are essential to the final outputs, and dependencies for `src/sql/features/project_vasoactive_agent.sql`.<br>
 
-iv) Analysis prep<br>
+iv) Analysis preparation<br>
 Build the two representations:<br>
 `src/sql/analysis/project_hourly_data.sql` <br>
 `src/sql/analysis/project_alternative_data.sql`<br>
